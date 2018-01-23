@@ -1,3 +1,7 @@
+/*
+***	Takes integer value as a parameter, allocates a new t_list node containing this value and returns it
+ */
+
 #include "../swaplib.h"
 
 t_list	*ft_create_node(int value)

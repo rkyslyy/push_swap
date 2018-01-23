@@ -1,3 +1,7 @@
+/*
+***	Shifts up all elements of a linked list (first becomes last)
+ */
+
 #include "../swaplib.h"
 
 void	ft_reverse_rotate(t_list **anchor)

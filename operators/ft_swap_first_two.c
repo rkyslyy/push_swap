@@ -1,3 +1,7 @@
+/*
+***	Swaps two first nodes of a linked list
+ */
+
 #include "../swaplib.h"
 
 void	ft_swap_first_two(t_list **anchor)
