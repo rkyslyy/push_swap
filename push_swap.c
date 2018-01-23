@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_push_swap.c                                     :+:      :+:    :+:   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,79 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef struct	s_list
-{
-	int		value;
-	struct s_list	*next;
-}				t_list;
-
-#include <stdio.h>
-#include <stdlib.h>
-
-static t_list	*ft_create_node(int value)
-{
-	t_list *new;
-
-	new = (t_list*)malloc(sizeof(t_list));
-	new->value = value;
-	new->next = NULL;
-	return (new);
-}
-
-static void		ft_add_node(t_list *new, t_list **anchor)
-{
-	new->next = *anchor;
-	*anchor = new;
-}
-
-static void		ft_swap_first_two(t_list **anchor)
-{
-	t_list *ptr;
-	t_list *tmp;
-
-	ptr = *anchor;
-	if (ptr != NULL && ptr->next != NULL)
-	{
-		tmp = *anchor;
-		*anchor = ptr->next;
-		tmp->next = tmp->next->next;
-		ptr = *anchor;
-		ptr->next = tmp;
-	}
-}
-
-static void		ft_push_on_other_top(t_list **from, t_list **to)
-{
-	t_list *tmp;
-	t_list *ptr;
-
-	if (*from != NULL && *to != NULL)
-	{
-		tmp = *from;
-		ptr = *from;
-		*from = ptr->next;
-		tmp->next = *to;
-		*to = tmp;
-	}
-}
-
-static void		ft_rotate(t_list **anchor)
-{
-	t_list *ptr;
-	t_list *tmp;
-
-	ptr = *anchor;
-	if (ptr != NULL && ptr->next != NULL)
-	{
-		tmp = *anchor;
-		*anchor = ptr->next;
-		ptr = *anchor;
-		while (ptr->next != NULL)
-			ptr = ptr->next;
-		ptr->next = tmp;
-		tmp->next = NULL;
-	}
-}
+#include "./swaplib.h"
 
 static int		ft_check_if_min(t_list *anchor)
 {
@@ -126,27 +54,95 @@ static void		ft_print_stacks(t_list *a, t_list *b)
 	printf("NULL\n");
 }
 
+static int		ft_is_sorted(t_list *anchor)
+{
+	t_list *ptr;
+
+	ptr = anchor;
+	while (ptr != NULL)
+	{
+		if (ptr->next != NULL && ptr->value > ptr->next->value)
+			return (0);
+		ptr = ptr->next;
+	}
+	return (1);
+}
+
+static int		ft_pick_rotate(t_list *anchor)
+{
+	t_list	*ptr;
+	int		size;
+	int		min;
+	int		gotcha;
+
+	ptr = anchor;
+	min = ptr->value;
+	size = 1;
+	while (ptr != NULL)
+	{
+		if (ptr->value < min)
+			gotcha = size;
+		size += 1;
+		ptr = ptr->next;
+	}
+	if (size - gotcha < size / 2)
+		return (1);
+	else
+		return (2);
+}
+
 int				main(void)
 {
-	t_list *a;
-	t_list *b;
-	t_list *ptr;
+	t_list	*a;
+	t_list	*b;
+	int		total;
 
 	a = NULL;
 	b = NULL;
-	ft_add_node(ft_create_node(42), &a);
+	total = 0;
+	ft_add_node(ft_create_node(1), &a);
+	ft_add_node(ft_create_node(0), &a);
+	ft_add_node(ft_create_node(19), &a);
+	ft_add_node(ft_create_node(9), &a);
+	ft_add_node(ft_create_node(7), &a);
 	ft_add_node(ft_create_node(11), &a);
-	ft_add_node(ft_create_node(50), &b);
-	ft_add_node(ft_create_node(33), &b);
 	ft_print_stacks(a, b);
-	printf("\nSwapping first two in 'a'\n");
-	ft_swap_first_two(&a);
+	while (a != NULL && !ft_is_sorted(a))
+	{
+		if (a->next != NULL && a->value > a->next->value)
+		{
+			printf("swapped first two\n");
+			total += 1;
+			ft_swap_first_two(&a);
+		}
+		while (!ft_check_if_min(a))
+		{
+			total += 1;
+			if (ft_pick_rotate(a) == 1)
+			{
+				printf("reverse rotating\n");
+				ft_reverse_rotate(&a);
+			}
+			else
+			{
+				printf("rotating\n");
+				ft_rotate(&a);
+			}
+		}
+		if (!ft_is_sorted(a))
+		{
+			total += 1;
+			printf("pushing to 'b'\n");
+			ft_push_from_to(&a, &b);
+		}
+	}
+	while (b != NULL)
+	{
+		total += 1;
+		printf("pushing to 'a'\n");
+		ft_push_from_to(&b, &a);
+	}
 	ft_print_stacks(a, b);
-	ft_push_on_other_top(&b, &a);
-	printf("\nMoving first from 'a' to 'b'\n");
-	ft_print_stacks(a, b);
-	ft_rotate(&a);
-	printf("\nRotating 'a'\n");
-	ft_print_stacks(a, b);
+	printf("\ntotal amount of operations: %d\n\n", total);
 	return (0);
 }
