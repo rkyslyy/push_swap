@@ -37,7 +37,7 @@ static void	ft_filler(unsigned int work, int m, int minus, char *ret)
 		ret[m + minus] = '-';
 }
 
-char		*ft_itoa(int n)
+char		*ft_itoa(long long n)
 {
 	int				m;
 	int				minus;

@@ -18,6 +18,8 @@ HEADER = ./libft.h
 
 OPTIONS = -c -I $(HEADER)
 
+FT_PRINTF = ./ft_printf/libftprintf.a
+
 SOURCES = ./ft_atoi.c ./ft_bzero.c ./ft_ch.c ./ft_filler.c ./ft_isalnum.c ./ft_isalpha.c ./ft_isascii.c ./ft_isdigit.c \
 			./ft_isprint.c ./ft_itoa.c ./ft_lstadd.c ./ft_lstdel.c ./ft_lstdelone.c ./ft_lstiter.c ./ft_lstmap.c ./ft_lstnew.c  \
 			./ft_memalloc.c ./ft_memccpy.c ./ft_memchr.c ./ft_memcmp.c ./ft_memcpy.c ./ft_memdel.c ./ft_memmove.c ./ft_memset.c \
@@ -41,13 +43,15 @@ OBJECTS = ./ft_atoi.o ./ft_bzero.o ./ft_ch.o ./ft_filler.o ./ft_isalnum.o ./ft_i
 all: $(NAME)
 
 $(NAME):
-				 gcc $(FLAGS) $(OPTIONS) $(SOURCES)
-				@ ar rc $(NAME) $(OBJECTS)
+				@ make re -C ./ft_printf
+				@ gcc $(FLAGS) $(OPTIONS) $(SOURCES)
+				@ ar rc $(NAME) $(OBJECTS) ./ft_printf/*.o
 				@ ranlib $(NAME)
 clean:
 				@ /bin/rm -f $(OBJECTS)
 
 fclean:	clean
+				@ /bin/rm -f $(FT_PRINTF)
 				@ /bin/rm -f $(NAME)
 
 re: fclean all

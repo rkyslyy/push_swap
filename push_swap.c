@@ -10,30 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "./swaplib.h"
 #include "./libft/libft.h"
 
-static void		ft_print_stacks(t_stack *a, t_stack *b)
-{
-	t_stack *ptr;
+// static void		ft_print_stacks(t_stack *a, t_stack *b)
+// {
+// 	t_stack *ptr;
 
-	ptr = a;
-	printf("\na: ");
-	while (ptr != NULL)
-	{
-		printf("%d - ", ptr->value);
-		ptr = ptr->next;
-	}
-	printf("NULL\nb: ");
-	ptr = b;
-	while (ptr != NULL)
-	{
-		printf("%d - ", ptr->value);
-		ptr = ptr->next;
-	}
-	printf("NULL\n");
-}
+// 	ptr = a;
+// 	printf("\na: ");
+// 	while (ptr != NULL)
+// 	{
+// 		printf("%d - ", ptr->value);
+// 		ptr = ptr->next;
+// 	}
+// 	printf("NULL\nb: ");
+// 	ptr = b;
+// 	while (ptr != NULL)
+// 	{
+// 		printf("%d - ", ptr->value);
+// 		ptr = ptr->next;
+// 	}
+// 	printf("NULL\n");
+// }
 
 int				main(int argc, char **argv)
 {
@@ -48,17 +47,17 @@ int				main(int argc, char **argv)
 	add = argc - 1;
 	while (add >= 1)
 	{
-		ft_add_node(ft_create_node(atoi(argv[add])), &a);
+		ft_add_node(ft_create_node(ft_atoi(argv[add])), &a);
 		add -= 1;
 	}
-	//printf("_______________________________");
-	//ft_print_stacks(a, b);
-	//printf("\n");
+	// printf("_______________________________");
+	// ft_print_stacks(a, b);
+	// printf("\n");
 	while (a != NULL && !ft_is_sorted(a))
 	{
 		if (a->next != NULL && a->value > a->next->value)
 		{
-			printf("sa\n");
+			ft_printf("sa\n");
 			total += 1;
 			ft_swap_first_two(&a);
 		}
@@ -89,8 +88,8 @@ int				main(int argc, char **argv)
 		printf("pa\n");
 		ft_push_from_to(&b, &a);
 	}
-	//ft_print_stacks(a, b);
-	//printf("_______________________________\n");
-	//printf("Total amount of operations: %d\n\n", total);
+	// ft_print_stacks(a, b);
+	// printf("_______________________________\n");
+	// printf("Total amount of operations: %d\n\n", total);
 	return (0);
 }
