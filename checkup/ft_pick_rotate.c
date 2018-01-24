@@ -4,9 +4,9 @@
 
 #include "../swaplib.h"
 
-int	ft_pick_rotate(t_list *anchor)
+int	ft_pick_rotate(t_stack *anchor)
 {
-	t_list	*ptr;
+	t_stack	*ptr;
 	int		size;
 	int		min;
 	int		gotcha;

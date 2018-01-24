@@ -12,10 +12,11 @@
 
 #include <stdlib.h>
 #include "./swaplib.h"
+#include "./libft/libft.h"
 
-static void		ft_print_stacks(t_list *a, t_list *b)
+static void		ft_print_stacks(t_stack *a, t_stack *b)
 {
-	t_list *ptr;
+	t_stack *ptr;
 
 	ptr = a;
 	printf("\na: ");
@@ -36,8 +37,8 @@ static void		ft_print_stacks(t_list *a, t_list *b)
 
 int				main(int argc, char **argv)
 {
-	t_list	*a;
-	t_list	*b;
+	t_stack	*a;
+	t_stack	*b;
 	int		total;
 	int		add;
 
@@ -50,8 +51,9 @@ int				main(int argc, char **argv)
 		ft_add_node(ft_create_node(atoi(argv[add])), &a);
 		add -= 1;
 	}
-	ft_print_stacks(a, b);
-	printf("\n");
+	//printf("_______________________________");
+	//ft_print_stacks(a, b);
+	//printf("\n");
 	while (a != NULL && !ft_is_sorted(a))
 	{
 		if (a->next != NULL && a->value > a->next->value)
@@ -87,8 +89,8 @@ int				main(int argc, char **argv)
 		printf("pa\n");
 		ft_push_from_to(&b, &a);
 	}
-	ft_print_stacks(a, b);
-	printf("_______________________________\n");
-	printf("Total amount of operations: %d\n\n", total);
+	//ft_print_stacks(a, b);
+	//printf("_______________________________\n");
+	//printf("Total amount of operations: %d\n\n", total);
 	return (0);
 }

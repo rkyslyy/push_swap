@@ -1,12 +1,12 @@
 /*
-***	Checks if the list is sorted by ascending order of it`s values
+***	Checks if the stack is sorted by ascending order of it`s values
  */
 
 #include "../swaplib.h"
 
-int	ft_is_sorted(t_list *anchor)
+int	ft_is_sorted(t_stack *anchor)
 {
-	t_list *ptr;
+	t_stack *ptr;
 
 	ptr = anchor;
 	while (ptr != NULL)

@@ -1,14 +1,14 @@
 /*
-***	Shifts up all elements of a linked list (first becomes last)
+***	Shifts up all elements of a linked stack (first becomes last)
  */
 
 #include "../swaplib.h"
 
-void	ft_reverse_rotate(t_list **anchor)
+void	ft_reverse_rotate(t_stack **anchor)
 {
-	t_list	*prelast;
-	t_list	*ptr;
-	t_list	*last;
+	t_stack	*prelast;
+	t_stack	*ptr;
+	t_stack	*last;
 
 	ptr = *anchor;
 	if (ptr != NULL && ptr->next != NULL)

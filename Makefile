@@ -1,4 +1,8 @@
+DO_ALL = do_all
+
 SWAP_NAME = push_swap
+
+CHECKER_NAME = checker
 
 HEADER = ./swaplib.h
 
@@ -17,7 +21,8 @@ CHECKUP =	./checkup/ft_check_if_min.c		\
 			./checkup/ft_is_sorted.c		\
 			./checkup/ft_pick_rotate.c
 
-OBJECTS =	./ft_push_from_to.o				\
+SWOBJECTS =	./libft/*.o						\
+			./ft_push_from_to.o				\
 			./ft_reverse_rotate.o			\
 			./ft_rotate.o					\
 			./ft_swap_first_two.o			\
@@ -28,11 +33,16 @@ OBJECTS =	./ft_push_from_to.o				\
 			./ft_pick_rotate.o				\
 			./push_swap.o
 
-all: $(SWAP_NAME)
+SWAPSOURCES = $(OPERATORS) $(LISTS) $(CHECKUP)
 
-$(SWAP_NAME):
-				@ gcc $(FLAGS) $(OPTIONS) $(OPERATORS) $(LISTS) $(CHECKUP)
-				@ gcc $(OBJECTS) -o $(SWAP_NAME)
+OBJECTS = $(SWOBJECTS)
+
+all: $(DO_ALL)
+
+$(DO_ALL):
+				 make -C libft
+				@ gcc $(FLAGS) $(OPTIONS) $(SWAPSOURCES)
+				@ gcc $(SWOBJECTS) -o $(SWAP_NAME)
 				@ /bin/rm -f $(OBJECTS)
 clean:
 				@ /bin/rm -f $(OBJECTS)

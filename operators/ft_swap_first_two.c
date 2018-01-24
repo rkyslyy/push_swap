@@ -1,13 +1,13 @@
 /*
-***	Swaps two first nodes of a linked list
+***	Swaps two first nodes of a linked stack
  */
 
 #include "../swaplib.h"
 
-void	ft_swap_first_two(t_list **anchor)
+void	ft_swap_first_two(t_stack **anchor)
 {
-	t_list *ptr;
-	t_list *tmp;
+	t_stack *ptr;
+	t_stack *tmp;
 
 	ptr = *anchor;
 	if (ptr != NULL && ptr->next != NULL)

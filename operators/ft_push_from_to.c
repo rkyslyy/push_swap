@@ -1,13 +1,13 @@
 /*
-***	Moves first node from one linked list (parameter "from") to another (parameter "to")
+***	Moves first node from one linked stack (parameter "from") to another (parameter "to")
  */
 
 #include "../swaplib.h"
 
-void	ft_push_from_to(t_list **from, t_list **to)
+void	ft_push_from_to(t_stack **from, t_stack **to)
 {
-	t_list *tmp;
-	t_list *ptr;
+	t_stack *tmp;
+	t_stack *ptr;
 
 	if (*from != NULL)
 	{
