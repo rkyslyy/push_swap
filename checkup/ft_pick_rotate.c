@@ -21,7 +21,7 @@ int	ft_pick_rotate(t_stack *anchor)
 		size += 1;
 		ptr = ptr->next;
 	}
-	if (size - gotcha < size / 2)
+	if (size - gotcha <= size / 2)
 		return (1);
 	else
 		return (2);

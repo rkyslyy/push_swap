@@ -10,6 +10,7 @@ typedef struct		s_stack
 # include <stdio.h>
 # include <stdlib.h>
 
+char	**ft_get_ints(char const *arg);
 int		ft_check_if_min(t_stack *anchor);
 int		ft_is_sorted(t_stack *anchor);
 int		ft_pick_rotate(t_stack *anchor);

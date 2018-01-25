@@ -1,5 +1,5 @@
 /*
-***	Shifts up all elements of a linked stack (first becomes last)
+***	Shifts up all elements of a linked stack (last becomes first)
  */
 
 #include "../swaplib.h"

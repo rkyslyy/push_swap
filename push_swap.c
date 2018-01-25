@@ -40,14 +40,21 @@ int				main(int argc, char **argv)
 	t_stack	*b;
 	int		total;
 	int		add;
+	char	**nums;
 
+	if (argc != 2)
+		return (1);
 	a = NULL;
 	b = NULL;
 	total = 0;
-	add = argc - 1;
-	while (add >= 1)
+	nums = ft_strsplit(argv[1], ' ');
+	add = 0;
+	while (nums[add] != 0)
+		add += 1;
+	add -= 1;
+	while (add >= 0)
 	{
-		ft_add_node(ft_create_node(ft_atoi(argv[add])), &a);
+		ft_add_node(ft_create_node(ft_atoi(nums[add])), &a);
 		add -= 1;
 	}
 	// printf("_______________________________");
@@ -66,26 +73,26 @@ int				main(int argc, char **argv)
 			total += 1;
 			if (ft_pick_rotate(a) == 1)
 			{
-				printf("rra\n");
+				ft_printf("rra\n");
 				ft_reverse_rotate(&a);
 			}
 			else
 			{
-				printf("ra\n");
+				ft_printf("ra\n");
 				ft_rotate(&a);
 			}
 		}
 		if (!ft_is_sorted(a))
 		{
 			total += 1;
-			printf("pb\n");
+			ft_printf("pb\n");
 			ft_push_from_to(&a, &b);
 		}
 	}
 	while (b != NULL)
 	{
 		total += 1;
-		printf("pa\n");
+		ft_printf("pa\n");
 		ft_push_from_to(&b, &a);
 	}
 	// ft_print_stacks(a, b);

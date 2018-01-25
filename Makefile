@@ -13,9 +13,7 @@ LIBFT =		./libft/libft.a
 OPERATORS =	./operators/ft_push_from_to.c	\
 			./operators/ft_reverse_rotate.c	\
 			./operators/ft_rotate.c			\
-			./operators/ft_swap_first_two.c	\
-			./push_swap.c					\
-			./checker.c
+			./operators/ft_swap_first_two.c
 
 LISTS =		./lists/ft_add_node.c			\
 			./lists/ft_create_node.c
@@ -30,7 +28,8 @@ all: $(DO_ALL)
 
 $(DO_ALL):
 				@ make re -C libft
-				@ gcc $(OPTIONS) $(SWAPSOURCES) -o $(SWAP_NAME)
+				@ gcc $(OPTIONS) $(SWAPSOURCES) ./push_swap.c -o $(SWAP_NAME)
+				@ gcc $(OPTIONS) $(SWAPSOURCES) ./checker.c -o $(CHECKER_NAME)
 
 clean:
 				@ make fclean -C libft

@@ -13,26 +13,88 @@
 #include "./libft/libft.h"
 #include "./swaplib.h"
 
+// static void		ft_print_stacks(t_stack *a, t_stack *b)
+// {
+// 	t_stack *ptr;
+
+// 	ptr = a;
+// 	printf("\na: ");
+// 	while (ptr != NULL)
+// 	{
+// 		printf("%d - ", ptr->value);
+// 		ptr = ptr->next;
+// 	}
+// 	printf("NULL\nb: ");
+// 	ptr = b;
+// 	while (ptr != NULL)
+// 	{
+// 		printf("%d - ", ptr->value);
+// 		ptr = ptr->next;
+// 	}
+// 	printf("NULL\n");
+//}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*a;
 	t_stack	*b;
 	char	*line;
 	int		add;
+	char	**nums;
 
+	if (argc != 2)
+		return (1);
 	a = NULL;
 	b = NULL;
-	add = argc - 1;
-	while (add >= 1)
+	nums = ft_strsplit(argv[1], ' ');
+	add = 0;
+	while (nums[add] != 0)
+		add += 1;
+	add -= 1;
+	while (add >= 0)
 	{
-		ft_add_node(ft_create_node(ft_atoi(argv[add])), &a);
+		ft_add_node(ft_create_node(ft_atoi(nums[add])), &a);
 		add -= 1;
 	}
 	add = 1;
 	while (add != 0)
 	{
-		add = get_next_line(1, &line);
-		ft_printf("line is %s\n", line);
+		add = get_next_line(0, &line);
+		if (ft_strcmp(line, "sa") == 0)
+			ft_swap_first_two(&a);
+		if (ft_strcmp(line, "sb") == 0)
+			ft_swap_first_two(&b);
+		if (ft_strcmp(line, "ss") == 0)
+		{
+			ft_swap_first_two(&a);
+			ft_swap_first_two(&b);
+		}
+		if (ft_strcmp(line, "pa") == 0)
+			ft_push_from_to(&b, &a);
+		if (ft_strcmp(line, "pb") == 0)
+			ft_push_from_to(&a, &b);
+		if (ft_strcmp(line, "ra") == 0)
+			ft_rotate(&a);
+		if (ft_strcmp(line, "rb") == 0)
+			ft_rotate(&b);
+		if (ft_strcmp(line, "rr") == 0)
+		{
+			ft_rotate(&a);
+			ft_rotate(&b);
+		}
+		if (ft_strcmp(line, "rra") == 0)
+			ft_reverse_rotate(&a);
+		if (ft_strcmp(line, "rrb") == 0)
+			ft_reverse_rotate(&b);
+		if (ft_strcmp(line, "rrr") == 0)
+		{
+			ft_reverse_rotate(&a);
+			ft_reverse_rotate(&b);
+		}
 	}
+	if (ft_is_sorted(a))
+		ft_printf("OK\n");
+	else
+		ft_printf("KO\n");
 	return (0);
 }
