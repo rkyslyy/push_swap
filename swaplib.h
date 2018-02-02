@@ -13,7 +13,7 @@ typedef struct		s_stack
 char	**ft_get_ints(char const *arg);
 int		ft_check_if_min(t_stack *anchor);
 int		ft_is_sorted(t_stack *anchor);
-int		ft_pick_rotate(t_stack *anchor);
+int		ft_pick_rotate(t_stack *anchor, int next);
 void	ft_add_node(t_stack *new, t_stack **anchor);
 t_stack	*ft_create_node(int value);
 void	ft_push_from_to(t_stack **from, t_stack **to);
