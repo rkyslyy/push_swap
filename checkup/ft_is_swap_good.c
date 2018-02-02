@@ -1,6 +1,6 @@
 #include "../swaplib.h"
 
-int	ft_check_if_swap_good(t_stack *anchor, int min, int max)
+int	ft_is_swap_good(t_stack *anchor, int min, int max)
 {
 	int		big;
 	int		little;

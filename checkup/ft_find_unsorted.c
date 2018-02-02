@@ -1,11 +1,10 @@
 #include "../swaplib.h"
 
-int	ft_find_unsorted(t_stack *anchor)
+int	ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 {
 	t_stack *ptr;
 	int		gotcha;
 	int		size;
-	int		min;
 
 	gotcha = 1;
 	size = 0;
@@ -21,13 +20,14 @@ int	ft_find_unsorted(t_stack *anchor)
 	ptr = anchor;
 	while (ptr != NULL)
 	{
-		if (ptr->next != NULL && ptr->value > ptr->next->value && ptr->next->value != min)
+		if (ptr->next != NULL && ptr->value > ptr->next->value && !(ptr->value == max && ptr->next->value == min))
 			break ;
-		if (ptr->next == NULL && ptr->value > anchor->value && anchor->value != min)
+		if (ptr->next == NULL && ptr->value > anchor->value && !(ptr->value == max && anchor->value == min))
 			break ;
 		gotcha += 1;
 		ptr = ptr->next;
 	}
+	*mem = ptr->value;
 	if (size - gotcha < size / 2)
 		return (2);
 	return (1);

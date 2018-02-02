@@ -11,6 +11,7 @@ OPTIONS = -Wall -Wextra -Werror
 LIBFT =		./libft/libft.a
 
 OPERATORS =	./operators/ft_push_from_to.c	\
+			./operators/ft_push_till_big.c	\
 			./operators/ft_reverse_rotate.c	\
 			./operators/ft_rotate.c			\
 			./operators/ft_swap_first_two.c
@@ -18,8 +19,12 @@ OPERATORS =	./operators/ft_push_from_to.c	\
 LISTS =		./lists/ft_add_node.c			\
 			./lists/ft_create_node.c
 
-CHECKUP =	./checkup/ft_check_if_min.c		\
+CHECKUP =	./checkup/ft_get_min.c			\
+			./checkup/ft_get_max.c			\
+			./checkup/ft_is_swap_good.c		\
 			./checkup/ft_is_sorted.c		\
+			./checkup/ft_find_unsorted.c	\
+			./checkup/ft_range.c			\
 			./checkup/ft_pick_rotate.c
 
 SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP)
