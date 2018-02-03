@@ -13,6 +13,21 @@
 #include "./swaplib.h"
 #include "./libft/libft.h"
 
+// static int		ft_get_size(t_stack *a)
+// {
+// 	t_stack *ptr;
+// 	int	size;
+
+// 	ptr = a;
+// 	size = 0;
+// 	while (ptr != NULL)
+// 	{
+// 		size += 1;
+// 		ptr = ptr->next;
+// 	}
+// 	return (size);
+// }
+
 static void		ft_print_stacks(t_stack *a, t_stack *b)
 {
 	t_stack *ptr;
@@ -111,98 +126,60 @@ int				main(int argc, char **argv)
 		printf("sorted\n");
 	else
 	{
-		if (ft_find_unsorted(a, ft_get_min(a), ft_get_max(a), &mem) == 1)
-			while (a->value != mem)
+		while (ft_is_sorted(a) != 1 || b != NULL)
+		{
+			if (ft_find_unsorted(a, ft_get_min(a), ft_get_max(a), &mem) == 1)
+				while (a->value != mem)
+				{
+					printf("ra\n");
+					ft_rotate(&a);
+				}
+			else
+				while (a->value != mem)
+				{
+					printf("rra\n");
+					ft_reverse_rotate(&a);
+				}
+			if (ft_is_swap_good(a, ft_get_min(a), ft_get_max(a)) == 1)
+			{
+				printf("sa\n");
+				ft_swap_first_two(&a);
+			}
+			else
+			{
+				ft_rotate(&a);
+				printf("ra\n");
+				while (a->value < mem && !(mem == ft_get_max(a) && a->value == ft_get_min(a)))
+				{
+					ft_push_from_to(&a, &b);
+					printf("pb\n");
+				}
+				// ft_print_stacks(a, b);
+				// printf("_______________________________\n");
+				while (b != NULL)
+				{
+					ft_range(&a, b->value);
+					printf("pa\n");
+					ft_push_from_to(&b, &a);
+				}
+				// ft_print_stacks(a, b);
+				// printf("_______________________________\n");
+			}
+		}
+		if (ft_pick_rotate(a, ft_get_min(a)) == 1)
+			while (a->value != ft_get_min(a))
 			{
 				printf("ra\n");
 				ft_rotate(&a);
 			}
 		else
-			while (a->value != mem)
+			while (a->value != ft_get_min(a))
 			{
 				printf("rra\n");
 				ft_reverse_rotate(&a);
 			}
-		if (ft_is_swap_good(a, ft_get_min(a), ft_get_max(a)) == 1)
-			printf("ready to swap\n");
-		else
-		{
-			ft_rotate(&a);
-			printf("ra\n");
-			while (a->value < mem)
-			{
-				ft_push_from_to(&a, &b);
-				printf("pb\n");
-			}
-			ft_print_stacks(a, b);
-			printf("_______________________________\n");
-			printf("%d\n", ft_range(a, b->value));
-		}
-		// while (ft_is_sorted(a) != 1)
-		// {
-		// 	add = ft_get_min(a);
-		// 	if (a->value > a->next->value)
-		// 		ft_swap_first_two(&a);
-		// 	if (ft_find_unsorted(a) == 1)
-		// 		while (a->value < a->next->value || a->next->value == add)
-		// 		{
-		// 			printf("ra\n");
-		// 			ft_rotate(&a);
-		// 			//ft_print_stacks(a, b);
-		// 		}
-		// 	else
-		// 		while (a->value < a->next->value || a->next->value == add)
-		// 		{
-		// 			printf("rra\n");
-		// 			ft_reverse_rotate(&a);
-		// 			//ft_print_stacks(a, b);
-		// 		}
-		// 	mem = a->value;
-		// 	ft_rotate(&a);
-		// 	printf("ra\n");
-		// 	//ft_print_stacks(a, b);
-		// 	while (a->value < mem && a->value != add)
-		// 	{
-		// 		printf("pb\n");
-		// 		ft_push_from_to(&a, &b);
-		// 		//ft_print_stacks(a, b);
-		// 	}
-		// 	while (b != NULL)
-		// 	{
-		// 		next = ft_get_next(a, b->value);
-		// 		if (ft_pick_rotate(a, next) == 1)
-		// 			while (a->value != next)
-		// 			{
-		// 				printf("ra\n");
-		// 				ft_rotate(&a);
-		// 				//ft_print_stacks(a, b);
-		// 			}
-		// 		else
-		// 			while (a->value != next)
-		// 			{
-		// 				printf("rra\n");
-		// 				ft_reverse_rotate(&a);
-		// 				//ft_print_stacks(a, b);
-		// 			}
-		// 		printf("pa\n");
-		// 		ft_push_from_to(&b, &a);
-		// 		//ft_print_stacks(a, b);
-		// 	}
-		// }
-		// if (ft_pick_final(a) == 1)
-		// 	while (a->value != ft_get_min(a))
-		// 	{
-		// 		printf("ra\n");
-		// 		ft_rotate(&a);
-		// 		//ft_print_stacks(a, b);
-		// 	}
-		// else
-		// 	while (a->value != ft_get_min(a))
-		// 	{
-		// 		printf("rra\n");
-		// 		ft_reverse_rotate(&a);
-		// 	//	ft_print_stacks(a, b);
-		// 	}
+		ft_print_stacks(a, b);
+		printf("_______________________________\n");
 	}
 	// ft_print_stacks(a, b);
 	// printf("_______________________________\n");

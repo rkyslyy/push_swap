@@ -4,7 +4,7 @@
 
 #include "../swaplib.h"
 
-int	ft_pick_rotate(t_stack *anchor, int next)
+int	ft_pick_rotate(t_stack *anchor, int min)
 {
 	t_stack	*ptr;
 	int		size;
@@ -21,7 +21,7 @@ int	ft_pick_rotate(t_stack *anchor, int next)
 	ptr = anchor;
 	while (ptr != NULL)
 	{
-		if (ptr->value == next)
+		if (ptr->value == min)
 			break ;
 		gotcha += 1;
 		ptr = ptr->next;
