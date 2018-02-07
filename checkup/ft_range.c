@@ -33,18 +33,6 @@
 // 	printf("NULL\n");
 // }
 
-static int	ft_get_last_value(t_stack *anchor)
-{
-	int ret;
-
-	t_stack *ptr;
-	ptr = anchor;
-	while (ptr->next != NULL)
-		ptr = ptr->next;
-	ret = ptr->value;
-	return (ret);
-}
-
 int	ft_range(t_stack **a, int first_b)
 {
 	t_stack *ptr;

@@ -4,24 +4,20 @@
 
 #include "../swaplib.h"
 
-int	ft_pick_rotate(t_stack *anchor, int min)
+int	ft_pick_rotate(t_stack *anchor)
 {
 	t_stack	*ptr;
 	int		size;
 	int		gotcha;
+	int		max;
 
-	ptr = anchor;
-	size = 1;
 	gotcha = 1;
-	while (ptr != NULL)
-	{
-		size += 1;
-		ptr = ptr->next;
-	}
+	max = ft_get_max(anchor);
+	size = ft_get_size(anchor);
 	ptr = anchor;
 	while (ptr != NULL)
 	{
-		if (ptr->value == min)
+		if (ptr->value == max)
 			break ;
 		gotcha += 1;
 		ptr = ptr->next;

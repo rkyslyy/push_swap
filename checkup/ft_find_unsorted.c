@@ -1,6 +1,25 @@
 #include "../swaplib.h"
 
-int	ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
+// static int	ft_how_many_after(t_stack *anchor, t_stack *node)
+// {
+// 	t_stack *ptr;
+// 	int		ret;
+
+// 	ptr = node;
+// 	ret = 0;
+// 	while (ptr->value <= node->value)
+// 	{
+// 		ptr = ptr->next;
+// 		if (ptr == NULL)
+// 			ptr = anchor;
+// 		if (ptr->value > node->value)
+// 			break ;
+// 		ret += 1;
+// 	}
+// 	return (ret);
+// }
+
+int			ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 {
 	t_stack *ptr;
 	int		gotcha;

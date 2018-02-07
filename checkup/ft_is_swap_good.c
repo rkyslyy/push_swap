@@ -28,24 +28,38 @@
 // 	return (ret);
 // }
 
-int	ft_is_swap_good(t_stack *anchor, int min, int max)
+int	ft_is_swap_good(t_stack *anchor)
 {
 	int		big;
 	int		little;
-	int		last;
-	t_stack	*ptr;
 
-	ptr = anchor;
-	while (ptr->next != NULL)
-		ptr = ptr->next;
-	last = ptr->value;
 	big = anchor->value;
 	little = anchor->next->value;
-	if ((big == max && (anchor->next->next->value == min)) ||
-		(big != max && (big < anchor->next->next->value)))
-		if (little > last || (little == min && last == max))
-			return (1);
-	// if (ft_how_many(anchor, max, min) < 3)
-	// 	return (1);
+	if (big > little && big < anchor->next->next->value)
+		return (1);
+	// int		last;
+	// t_stack	*ptr;
+
+	// ptr = anchor;
+	// while (ptr->next != NULL)
+	// 	ptr = ptr->next;
+	// last = ptr->value;
+	// big = anchor->value;
+	// little = anchor->next->value;
+	// if ((big == max && (anchor->next->next->value == min)) ||
+	// 	(big != max && (big < anchor->next->next->value)))
+	// 	if (little > last || (little == min && last == max))
+	// 		return (1);
+	// if (anchor->value != min && last > anchor->value)
+	// {
+	// 	if (anchor->next->value == min)
+	// 	{
+	// 		if (last == max)
+	// 			return (2);
+	// 	}
+	// 	else
+	// 		if (last < anchor->next->value)
+	// 			return (2);
+	// }
 	return (0);
 }

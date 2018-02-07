@@ -16,10 +16,16 @@ OPERATORS =	./operators/ft_push_from_to.c	\
 			./operators/ft_rotate.c			\
 			./operators/ft_swap_first_two.c
 
-LISTS =		./lists/ft_add_node.c			\
+LISTS =		./lists/ft_print_stacks.c		\
+			./lists/ft_add_node.c			\
 			./lists/ft_create_node.c
 
-CHECKUP =	./checkup/ft_get_min.c			\
+CHECKUP =	./checkup/ft_got_less.c			\
+			./checkup/ft_check_front.c		\
+			./checkup/ft_get_size.c			\
+			./checkup/ft_get_median.c		\
+			./checkup/ft_get_last_value.c	\
+			./checkup/ft_get_min.c			\
 			./checkup/ft_get_max.c			\
 			./checkup/ft_is_swap_good.c		\
 			./checkup/ft_is_sorted.c		\
