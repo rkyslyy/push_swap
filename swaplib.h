@@ -10,6 +10,8 @@ typedef struct		s_stack
 # include <stdio.h>
 # include <stdlib.h>
 
+int 	ft_get_next(t_stack *node, int mem, int pivot);
+int		ft_scout(t_stack *node, int mem, int pivot);
 int		ft_get_pivot(t_stack *a, int val);
 int		ft_get_biggest(t_stack *b, int val);
 int		ft_find_some(t_stack *b, int min, int max, t_stack *a);

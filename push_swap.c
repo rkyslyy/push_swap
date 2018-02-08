@@ -13,22 +13,6 @@
 #include "./swaplib.h"
 #include "./libft/libft.h"
 
-int		ft_get_next(t_stack *anchor, int prev)
-{
-	t_stack *ptr;
-	int		next;
-
-	ptr = anchor;
-	next = ptr->value;
-	while (ptr != NULL)
-	{
-		if (ptr->value > prev && ptr->value < next)
-			next = ptr->value;
-		ptr = ptr->next;
-	}
-	return (next);
-}
-
 int				main(int argc, char **argv)
 {
 	t_stack	*a;
@@ -60,7 +44,12 @@ int				main(int argc, char **argv)
 	{
 		while (a != NULL && !ft_is_sorted(a))
 		{
-			pivot = ft_get_pivot(a, ft_get_size(a) / 3);
+			if (ft_get_size(a) <= 100)
+				pivot = ft_get_pivot(a, ft_get_size(a) / 3);
+			else if (ft_get_size(a) <= 250)
+				pivot = ft_get_pivot(a, ft_get_size(a) / 4);
+			else
+				pivot = ft_get_pivot(a, ft_get_size(a) / 8);
 			mem = a->value;
 			ft_rotate(&a);
 			printf("ra\n");
@@ -89,9 +78,19 @@ int				main(int argc, char **argv)
 				}
 				else
 				{
-					total += 1;
-					printf("ra\n");
-					ft_rotate(&a);
+					if (b != NULL && ft_pick_rotate(b, ft_get_max(b)) == 1)
+					{
+						ft_rotate(&a);
+						ft_rotate(&b);
+						printf("rr\n");
+						total += 1;
+					}
+					else
+					{
+						total += 1;
+						printf("ra\n");
+						ft_rotate(&a);
+					}
 				}
 			}
 			if (a->value <= pivot)
