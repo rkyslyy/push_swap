@@ -12,13 +12,13 @@
 
 #include "../swaplib.h"
 
-int	ft_check_front(t_stack *node, int median)
+int	ft_check_front(t_stack *node, int last)
 {
 	t_stack *ptr;
 
 	ptr = node;
 	ptr = ptr->next;
-	while (ptr->value != median)
+	while (ptr->value != last)
 	{
 		if (ptr->value < node->value)
 			return (0);

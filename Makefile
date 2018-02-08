@@ -20,7 +20,10 @@ LISTS =		./lists/ft_print_stacks.c		\
 			./lists/ft_add_node.c			\
 			./lists/ft_create_node.c
 
-CHECKUP =	./checkup/ft_got_less.c			\
+CHECKUP =	./checkup/ft_get_pivot.c		\
+			./checkup/ft_get_biggest.c		\
+			./checkup/ft_find_some.c		\
+			./checkup/ft_got_less.c			\
 			./checkup/ft_check_front.c		\
 			./checkup/ft_get_size.c			\
 			./checkup/ft_get_median.c		\
