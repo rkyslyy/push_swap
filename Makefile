@@ -14,7 +14,18 @@ OPERATORS =	./operators/ft_push_from_to.c	\
 			./operators/ft_push_till_big.c	\
 			./operators/ft_reverse_rotate.c	\
 			./operators/ft_rotate.c			\
-			./operators/ft_swap_first_two.c
+			./operators/ft_swap_first_two.c	\
+			./operators/ft_push_a_to_b.c	\
+			./operators/ft_push_b_to_a.c	\
+			./operators/ft_rotate_a.c		\
+			./operators/ft_rotate_b.c		\
+			./operators/ft_rotate_both.c	\
+			./operators/ft_re_rotate_a.c	\
+			./operators/ft_re_rotate_b.c	\
+			./operators/ft_re_rotate_both.c	\
+			./operators/ft_swap_a.c			\
+			./operators/ft_swap_b.c			\
+			./operators/ft_swap_both.c
 
 LISTS =		./lists/ft_print_stacks.c		\
 			./lists/ft_add_node.c			\

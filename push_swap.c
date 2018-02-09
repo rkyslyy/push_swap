@@ -11,7 +11,57 @@
 /* ************************************************************************** */
 
 #include "./swaplib.h"
-#include "./libft/libft.h"
+
+static void ft_set_pivot(t_stack *a, int *pivot)
+{
+	if (ft_get_size(a) <= 100)
+		*pivot = ft_get_pivot(a, ft_get_size(a) / 3);
+	else if (ft_get_size(a) <= 250)
+		*pivot = ft_get_pivot(a, ft_get_size(a) / 4);
+	else
+		*pivot = ft_get_pivot(a, ft_get_size(a) / 8);
+}
+
+static void	ft_deal_with_b(t_stack **b, t_stack **a, int *total)
+{
+	t_stack *bptr;
+	t_stack *aptr;
+
+	bptr = *b;
+	aptr = *a;
+	if (bptr != NULL && ft_pick_rotate(bptr, ft_get_biggest(bptr, aptr->value)) == 1)
+		while (bptr->value != ft_get_biggest(bptr, aptr->value))
+		{
+			ft_rotate_b(b, total);
+			bptr = *b;
+		}
+	else
+		while (bptr != NULL && bptr->value != ft_get_biggest(bptr, aptr->value))
+		{
+			ft_reverse_rotate_b(b, total);
+			bptr = *b;
+		}
+	ft_push_from_a_to_b(a, b, total);
+}
+
+static void	ft_final(t_stack **a, t_stack **b, int *total)
+{
+	t_stack *aptr;
+	t_stack *bptr;
+
+	aptr = *a;
+	bptr = *b;
+	while (aptr->next != NULL && aptr->value != ft_get_min(aptr))
+	{
+		ft_rotate(a);
+		aptr = *a;
+	}
+	while (bptr != NULL)
+	{
+		ft_push_from_b_to_a(a, b, total);
+		bptr = *b;
+	}
+}
 
 int				main(int argc, char **argv)
 {
@@ -44,97 +94,31 @@ int				main(int argc, char **argv)
 	{
 		while (a != NULL && !ft_is_sorted(a))
 		{
-			if (ft_get_size(a) <= 100)
-				pivot = ft_get_pivot(a, ft_get_size(a) / 3);
-			else if (ft_get_size(a) <= 250)
-				pivot = ft_get_pivot(a, ft_get_size(a) / 4);
-			else
-				pivot = ft_get_pivot(a, ft_get_size(a) / 8);
+			ft_set_pivot(a, &pivot);
 			mem = a->value;
-			ft_rotate(&a);
-			printf("ra\n");
-			total += 1;
+			ft_rotate_a(&a, &total);
 			while (a->value != mem)
 			{
 				if (a->value <= pivot)
-				{
-					if (b != NULL && ft_pick_rotate(b, ft_get_biggest(b, a->value)) == 1)
-						while (b->value != ft_get_biggest(b, a->value))
-						{
-							ft_rotate(&b);
-							total += 1;
-							printf("rb\n");
-						}
-					else
-						while (b != NULL && b->value != ft_get_biggest(b, a->value))
-						{
-							ft_reverse_rotate(&b);
-							total += 1;
-							printf("rrb\n");
-						}
-					ft_push_from_to(&a, &b);
-					printf("pb\n");
-					total += 1;
-				}
+					ft_deal_with_b(&b, &a, &total);
 				else
 				{
 					if (b != NULL && ft_scout(a, mem, pivot) && ft_pick_rotate(b, ft_get_biggest(b, ft_get_next(a, mem, pivot))) == 1 && b->value != ft_get_biggest(b, ft_get_next(a, mem, pivot)))
-					{
-						ft_rotate(&a);
-						ft_rotate(&b);
-						printf("rr\n");
-						total += 1;
-					}
+						ft_rotate_both(&a, &b, &total);
 					else
-					{
-						total += 1;
-						printf("ra\n");
-						ft_rotate(&a);
-					}
+						ft_rotate_a(&a, &total);
 				}
 			}
 			if (a->value <= pivot)
-				{
-					if (b != NULL && ft_pick_rotate(b, ft_get_biggest(b, a->value)) == 1)
-						while (b->value != ft_get_biggest(b, a->value))
-						{
-							ft_rotate(&b);
-							total += 1;
-							printf("rb\n");
-						}
-					else
-						while (b != NULL && b->value != ft_get_biggest(b, a->value))
-						{
-							ft_reverse_rotate(&b);
-							total += 1;
-							printf("rrb\n");
-						}
-					ft_push_from_to(&a, &b);
-					printf("pb\n");
-					total += 1;
-				}
+					ft_deal_with_b(&b, &a, &total);
 			if (ft_pick_rotate(b, ft_get_max(b)) == 1)
 				while (b->value != ft_get_max(b))
-				{
-					ft_rotate(&b);
-					total += 1;
-					printf("rb\n");
-				}
+					ft_rotate_b(&b, &total);
 			else
 				while (b->value != ft_get_max(b))
-				{
-					ft_reverse_rotate(&b);
-					total += 1;
-					printf("rrb\n");
-				}
-			ft_print_stacks(a, b);
+					ft_reverse_rotate_b(&b, &total);
 		}
-		while (b != NULL)
-		{
-			ft_push_from_to(&b, &a);
-			total += 1;
-			printf("pa\n");
-		}
+		ft_final(&a, &b, &total);
 		ft_print_stacks(a, b);
 		printf("\nTotal amount of operations: %d\n", total);
 	}
