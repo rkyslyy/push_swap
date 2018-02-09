@@ -78,7 +78,7 @@ int				main(int argc, char **argv)
 				}
 				else
 				{
-					if (b != NULL && ft_pick_rotate(b, ft_get_max(b)) == 1)
+					if (b != NULL && ft_scout(a, mem, pivot) && ft_pick_rotate(b, ft_get_biggest(b, ft_get_next(a, mem, pivot))) == 1 && b->value != ft_get_biggest(b, ft_get_next(a, mem, pivot)))
 					{
 						ft_rotate(&a);
 						ft_rotate(&b);
