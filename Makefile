@@ -35,24 +35,18 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./checkup/ft_scout.c			\
 			./checkup/ft_get_pivot.c		\
 			./checkup/ft_get_biggest.c		\
-			./checkup/ft_find_some.c		\
-			./checkup/ft_got_less.c			\
-			./checkup/ft_check_front.c		\
 			./checkup/ft_get_size.c			\
-			./checkup/ft_get_median.c		\
 			./checkup/ft_get_last_value.c	\
 			./checkup/ft_get_min.c			\
 			./checkup/ft_get_max.c			\
 			./checkup/ft_is_swap_good.c		\
 			./checkup/ft_is_sorted.c		\
-			./checkup/ft_find_unsorted.c	\
-			./checkup/ft_range.c			\
 			./checkup/ft_pick_rotate.c
 
 FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_large/ft_set_pivot.c		\
 			./for_large/ft_final.c			\
-			./for_large/ft_quick_sort.c		\
+			./for_large/ft_quick_sort.c
 
 SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 

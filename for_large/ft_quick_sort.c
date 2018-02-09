@@ -1,27 +1,27 @@
 #include "../swaplib.h"
 
-static void	ft_pall(t_stack **a, t_stack **b, t_pack *pack)
+static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 {
-	t_stack *aptr;
-	t_stack *bptr;
+	t_stack *ap;
+	t_stack *bp;
 
-	aptr = *a;
-	bptr = *b;
-	while (aptr->value != pack->mem)
+	ap = *a;
+	bp = *b;
+	while (ap->value != p->mem)
 	{
-		if (aptr->value <= pack->pivot)
-			ft_deal_with_b(b, a, pack);
+		if (ap->value <= p->pivot)
+			ft_deal_with_b(b, a, p);
 		else
 		{
-			if (bptr != NULL && ft_scout(aptr, pack->mem, pack->pivot) &&
-				ft_pick_rotate(bptr, ft_get_biggest(bptr, ft_get_next(aptr, pack->mem, pack->pivot))) == 1
-				&& bptr->value != ft_get_biggest(bptr, ft_get_next(aptr, pack->mem, pack->pivot)))
-				ft_rotate_both(a, b, pack);
+			if (bp != NULL && ft_scout(ap, p->mem, p->pivot) &&
+				ft_pick_rotate(bp, ft_get_biggest(bp, ft_get_next(ap, p->mem, p->pivot))) == 1
+				&& bp->value != ft_get_biggest(bp, ft_get_next(ap, p->mem, p->pivot)))
+				ft_rotate_both(a, b, p);
 			else
-				ft_rotate_a(a, pack);
+				ft_rotate_a(a, p);
 		}
-		aptr = *a;
-		bptr = *b;
+		ap = *a;
+		bp = *b;
 	}
 }
 
@@ -68,4 +68,5 @@ void		ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 		aptr = *a;
 		bptr = *b;
 	}
+	ft_final(a, b, pack);
 }

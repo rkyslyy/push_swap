@@ -15,8 +15,6 @@ typedef struct		s_pack
 	int				add;
 }					t_pack;
 
-# include <stdio.h>
-# include <stdlib.h>
 # include "./libft/libft.h"
 
 void 	ft_set_pivot(t_stack *a, t_pack *pack);
@@ -26,18 +24,13 @@ int 	ft_get_next(t_stack *node, int mem, int pivot);
 int		ft_scout(t_stack *node, int mem, int pivot);
 int		ft_get_pivot(t_stack *a, int val);
 int		ft_get_biggest(t_stack *b, int val);
-int		ft_find_some(t_stack *b, int min, int max, t_stack *a);
-int		ft_got_less(t_stack *a, int median);
 void	ft_print_stacks(t_stack *a, t_stack *b);
-int		ft_check_front(t_stack *node, int median);
 int		ft_get_size(t_stack *a);
-int		ft_get_median(t_stack *anchor);
 int		ft_get_last_value(t_stack *anchor);
 int		ft_get_min(t_stack *anchor);
 int		ft_get_max(t_stack *anchor);
 int		ft_is_swap_good(t_stack *anchor);
 int		ft_find_unsorted(t_stack *anchor, int min, int max, int *mem);
-char	**ft_get_ints(char const *arg);
 int 	ft_range(t_stack **a, int first_b);
 int		ft_is_sorted(t_stack *anchor);
 int		ft_pick_rotate(t_stack *anchor, int to_find);
@@ -60,6 +53,7 @@ void	ft_swap_a(t_stack **a, t_pack *pack);
 void	ft_swap_b(t_stack **b, t_pack *pack);
 void	ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_insert_sort(t_stack **a, t_stack **b, t_pack *pack);
 
 
 #endif
