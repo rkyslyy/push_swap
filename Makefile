@@ -49,7 +49,12 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./checkup/ft_range.c			\
 			./checkup/ft_pick_rotate.c
 
-SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP)
+FOR_LARGE = ./for_large/ft_deal_with_b.c	\
+			./for_large/ft_set_pivot.c		\
+			./for_large/ft_final.c			\
+			./for_large/ft_quick_sort.c		\
+
+SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 
 all: $(DO_ALL)
 

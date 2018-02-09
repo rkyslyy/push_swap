@@ -7,17 +7,21 @@ typedef struct		s_stack
 	struct s_stack	*next;
 }					t_stack;
 
-typedef struct		s_pack;
+typedef struct		s_pack
 {
 	int				total;
 	int				pivot;
 	int				mem;
+	int				add;
 }					t_pack;
 
 # include <stdio.h>
 # include <stdlib.h>
 # include "./libft/libft.h"
 
+void 	ft_set_pivot(t_stack *a, t_pack *pack);
+void	ft_deal_with_b(t_stack **b, t_stack **a, t_pack *pack);
+void	ft_final(t_stack **a, t_stack **b, t_pack *pack);
 int 	ft_get_next(t_stack *node, int mem, int pivot);
 int		ft_scout(t_stack *node, int mem, int pivot);
 int		ft_get_pivot(t_stack *a, int val);
@@ -44,17 +48,18 @@ void	ft_push_till_big(t_stack *a, t_stack *b, int mem);
 void	ft_reverse_rotate(t_stack **anchor);
 void	ft_rotate(t_stack **anchor);
 void	ft_swap_first_two(t_stack **anchor);
-void	ft_push_from_a_to_b(t_stack **a, t_stack **b, int *total);
-void	ft_push_from_b_to_a(t_stack **a, t_stack **b, int *total);
-void	ft_rotate_a(t_stack **a, int *total);
-void	ft_rotate_b(t_stack **b, int *total);
-void	ft_rotate_both(t_stack **a, t_stack **b, int *total);
-void	ft_reverse_rotate_a(t_stack **a, int *total);
-void	ft_reverse_rotate_b(t_stack **b, int *total);
-void	ft_reverse_rotate_both(t_stack **a, t_stack **b, int *total);
-void	ft_swap_a(t_stack **a, int *total);
-void	ft_swap_b(t_stack **b, int *total);
-void	ft_swap_both(t_stack **a, t_stack **b, int *total);
+void	ft_push_from_a_to_b(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_push_from_b_to_a(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_rotate_a(t_stack **a, t_pack *pack);
+void	ft_rotate_b(t_stack **b, t_pack *pack);
+void	ft_rotate_both(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_reverse_rotate_a(t_stack **a, t_pack *pack);
+void	ft_reverse_rotate_b(t_stack **b, t_pack *pack);
+void	ft_reverse_rotate_both(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_swap_a(t_stack **a, t_pack *pack);
+void	ft_swap_b(t_stack **b, t_pack *pack);
+void	ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
 
 
 #endif
