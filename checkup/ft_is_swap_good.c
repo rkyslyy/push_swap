@@ -1,6 +1,6 @@
 #include "../swaplib.h"
 
-// static int	ft_how_many(t_stack *anchor, int max, int min)
+// static int	ft_how_many(t_stack *anchor, int ft_get_max(anchor), int min)
 // {
 // 	t_stack *ptr;
 // 	int		mem;
@@ -9,7 +9,7 @@
 // 	ptr = anchor;
 // 	mem = ptr->value;
 // 	ret = 0;
-// 	if (mem == max)
+// 	if (mem == ft_get_max(anchor))
 // 		while (ptr->value != min)
 // 		{
 // 			ptr = ptr->next;
@@ -37,24 +37,23 @@ int	ft_is_swap_good(t_stack *anchor)
 	little = anchor->next->value;
 	if (big > little && big < anchor->next->next->value)
 		return (1);
-	// int		last;
-	// t_stack	*ptr;
-
-	// ptr = anchor;
-	// while (ptr->next != NULL)
-	// 	ptr = ptr->next;
-	// last = ptr->value;
-	// big = anchor->value;
-	// little = anchor->next->value;
-	// if ((big == max && (anchor->next->next->value == min)) ||
-	// 	(big != max && (big < anchor->next->next->value)))
-	// 	if (little > last || (little == min && last == max))
-	// 		return (1);
+	int		last;
+	t_stack	*ptr;
+	ptr = anchor;
+	while (ptr->next != NULL)
+		ptr = ptr->next;
+	last = ptr->value;
+	big = anchor->value;
+	little = anchor->next->value;
+	if ((big == ft_get_max(anchor) && (anchor->next->next->value == ft_get_min(anchor))) ||
+		(big != ft_get_max(anchor) && (big < anchor->next->next->value)))
+		if (little > last || (little == ft_get_min(anchor) && last == ft_get_max(anchor)))
+			return (1);
 	// if (anchor->value != min && last > anchor->value)
 	// {
 	// 	if (anchor->next->value == min)
 	// 	{
-	// 		if (last == max)
+	// 		if (last == ft_get_max(anchor))
 	// 			return (2);
 	// 	}
 	// 	else
