@@ -10,29 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft/libft.h"
 #include "./swaplib.h"
-
-// static void		ft_print_stacks(t_stack *a, t_stack *b)
-// {
-// 	t_stack *ptr;
-
-// 	ptr = a;
-// 	printf("\na: ");
-// 	while (ptr != NULL)
-// 	{
-// 		printf("%d - ", ptr->value);
-// 		ptr = ptr->next;
-// 	}
-// 	printf("NULL\nb: ");
-// 	ptr = b;
-// 	while (ptr != NULL)
-// 	{
-// 		printf("%d - ", ptr->value);
-// 		ptr = ptr->next;
-// 	}
-// 	printf("NULL\n");
-//}
 
 int	main(int argc, char **argv)
 {

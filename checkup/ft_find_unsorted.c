@@ -1,25 +1,24 @@
 #include "../swaplib.h"
 
-// static int	ft_how_many_after(t_stack *anchor, t_stack *node)
-// {
-// 	t_stack *ptr;
-// 	int		ret;
+static t_stack	*ft_search(t_stack *ptr, t_stack *anchor, int *gotcha)
+{
+	while (ptr != NULL)
+	{
+		if (ptr->next != NULL && ptr->value > ptr->next->value
+			&& !(ptr->value == ft_get_max(anchor)
+				&& ptr->next->value == ft_get_min(anchor)))
+			break ;
+		if (ptr->next == NULL && ptr->value > anchor->value
+			&& !(ptr->value == ft_get_max(anchor)
+				&& anchor->value == ft_get_min(anchor)))
+			break ;
+		*gotcha += 1;
+		ptr = ptr->next;
+	}
+	return (ptr);
+}
 
-// 	ptr = node;
-// 	ret = 0;
-// 	while (ptr->value <= node->value)
-// 	{
-// 		ptr = ptr->next;
-// 		if (ptr == NULL)
-// 			ptr = anchor;
-// 		if (ptr->value > node->value)
-// 			break ;
-// 		ret += 1;
-// 	}
-// 	return (ret);
-// }
-
-int			ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
+int				ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 {
 	t_stack *ptr;
 	int		gotcha;
@@ -29,6 +28,7 @@ int			ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 	size = 0;
 	ptr = anchor;
 	min = ptr->value;
+	max = ft_get_max(anchor);
 	while (ptr != NULL)
 	{
 		size += 1;
@@ -37,15 +37,16 @@ int			ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 		ptr = ptr->next;
 	}
 	ptr = anchor;
-	while (ptr != NULL)
-	{
-		if (ptr->next != NULL && ptr->value > ptr->next->value && !(ptr->value == max && ptr->next->value == min))
-			break ;
-		if (ptr->next == NULL && ptr->value > anchor->value && !(ptr->value == max && anchor->value == min))
-			break ;
-		gotcha += 1;
-		ptr = ptr->next;
-	}
+	// while (ptr != NULL)
+	// {
+	// 	if (ptr->next != NULL && ptr->value > ptr->next->value && !(ptr->value == max && ptr->next->value == min))
+	// 		break ;
+	// 	if (ptr->next == NULL && ptr->value > anchor->value && !(ptr->value == max && anchor->value == min))
+	// 		break ;
+	// 	gotcha += 1;
+	// 	ptr = ptr->next;
+	// }
+	ptr = ft_search(ptr, anchor, &gotcha);
 	*mem = ptr->value;
 	if (size - gotcha < size / 2)
 		return (2);
