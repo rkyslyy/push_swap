@@ -65,6 +65,6 @@ clean:
 				@ make fclean -C libft
 
 fclean: clean
-				@ /bin/rm -f $(SWAP_NAME)
+				@ /bin/rm -f $(SWAP_NAME) $(CHECKER_NAME)
 
 re: fclean all

@@ -15,6 +15,7 @@ typedef struct		s_pack
 	int				add;
 	int				print;
 	int				visual;
+	int				output;
 }					t_pack;
 
 # include "./libft/libft.h"

@@ -40,7 +40,7 @@ static int	ft_return_usage(void)
 	ft_printf("usage: ./push_swap [values] [flags] |\n");
 	ft_printf("                      ^^       ^    |\n");
 	ft_printf("   Range of integer only      -v    |\n");
-	ft_printf("Digits, '-' and '+' only      -c    |\n");
+	ft_printf("Digits, '-' and '+' only      -o    |\n");
 	ft_printf("____________________________________|\n");
 	return (1);
 }
@@ -53,7 +53,7 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	nums = ft_strsplit(argv[argc - 1], ' ');
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
-	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-c") == 0)
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
