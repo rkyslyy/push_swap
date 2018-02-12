@@ -35,7 +35,7 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
-int					ft_atoi(const char *nptr);
+long long			ft_atoi(const char *nptr);
 void				ft_bzero(void *s, size_t n);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);

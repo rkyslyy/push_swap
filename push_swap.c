@@ -34,12 +34,27 @@ static void ft_swap_rotate(t_stack **a, t_pack *pack)
 		}
 }
 
-static void	ft_assign(t_stack **a, t_stack **b, t_pack *pack, char **nums)
+static int	ft_return_usage(void)
 {
-	*a = NULL;
-	*b = NULL;
-	pack->total = 0;
+	ft_printf("Error\n____________________________________\n");
+	ft_printf("usage: ./push_swap [values] [flags] |\n");
+	ft_printf("                      ^^       ^    |\n");
+	ft_printf("   Range of integer only      -v    |\n");
+	ft_printf("Digits, '-' and '+' only      -c    |\n");
+	ft_printf("____________________________________|\n");
+	return (1);
+}
+
+static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
+{
+	char	**nums;
+
 	pack->add = 0;
+	nums = ft_strsplit(argv[argc - 1], ' ');
+	if (!ft_is_input_valid(nums, pack))
+		return (1);
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-c") == 0)
+		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
 	pack->add -= 1;
@@ -48,26 +63,30 @@ static void	ft_assign(t_stack **a, t_stack **b, t_pack *pack, char **nums)
 		ft_add_node(ft_create_node(ft_atoi(nums[pack->add])), a);
 		pack->add -= 1;
 	}
+	return (0);
 }
 
 int			main(int argc, char **argv)
 {
 	t_stack	*a;
 	t_stack	*b;
-	char	**nums;
 	t_pack	pack;
 
-	if (argc != 2)
-		return (1);
-	nums = ft_strsplit(argv[1], ' ');
-	ft_assign(&a, &b, &pack, nums);
+	a = NULL;
+	b = NULL;
+	pack.total = 0;
+	pack.print = 1;
+	pack.visual = 0;
+	while (argc > 1)
+		if (ft_build_stack(&a, &pack, argv, argc--))
+			return (ft_return_usage());
 	if (ft_get_size(a) <= 3)
 		ft_swap_rotate(&a, &pack);
 	else if (ft_get_size(a) <= 10)
 		ft_insert_swap(&a, &b, &pack);
 	else
 		ft_quick_sort(&a, &b, &pack);
-	ft_print_stacks(a, b);
-	ft_printf("\nTotal amount of operations: %d\n", pack.total);
+	// ft_print_stacks(a, b);
+	// ft_printf("\nTotal amount of operations: %d\n", pack.total);
 	return (0);
 }

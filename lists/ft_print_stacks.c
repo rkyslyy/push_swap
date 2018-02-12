@@ -20,15 +20,15 @@ void	ft_print_stacks(t_stack *a, t_stack *b)
 	ft_printf("\na: ");
 	while (ptr != NULL)
 	{
-		ft_printf("%d - ", ptr->value);
+		ft_printf("%d ⁀ ", ptr->value);
 		ptr = ptr->next;
 	}
 	ft_printf("NULL\nb: ");
 	ptr = b;
 	while (ptr != NULL)
 	{
-		ft_printf("%d - ", ptr->value);
+		ft_printf("%d ‿ ", ptr->value);
 		ptr = ptr->next;
 	}
-	ft_printf("NULL\n");
+	ft_printf("NULL\n\n");
 }

@@ -4,5 +4,6 @@ void	ft_rotate_b(t_stack **b, t_pack *pack)
 {
 	ft_rotate(&*b);
 	pack->total += 1;
-	ft_printf("rb\n");
+	if (pack->print == 1)
+		ft_printf("rb\n");
 }

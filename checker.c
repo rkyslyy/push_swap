@@ -12,62 +12,92 @@
 
 #include "./swaplib.h"
 
+static int	ft_return_usage(void)
+{
+	ft_printf("Error\n____________________________________\n");
+	ft_printf("Usage: ./push_swap [values] [flags] |\n");
+	ft_printf("                      ^^       ^    |\n");
+	ft_printf("   Range of integer only      -v    |\n");
+	ft_printf("Digits, '-' and '+' only      -c    |\n");
+	ft_printf("____________________________________|\n");
+	return (1);
+}
+
+static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
+{
+	char	**nums;
+
+	pack->add = 0;
+	nums = ft_strsplit(argv[argc - 1], ' ');
+	if (!ft_is_input_valid(nums, pack))
+		return (1);
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-c") == 0)
+		return (0);
+	while (nums[pack->add] != 0)
+		pack->add += 1;
+	pack->add -= 1;
+	while (pack->add >= 0)
+	{
+		ft_add_node(ft_create_node(ft_atoi(nums[pack->add])), a);
+		pack->add -= 1;
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*a;
 	t_stack	*b;
 	char	*line;
-	int		add;
-	char	**nums;
+	t_pack	pack;
 
-	if (argc != 2)
-		return (1);
 	a = NULL;
 	b = NULL;
-	nums = ft_strsplit(argv[1], ' ');
-	add = 0;
-	while (nums[add] != 0)
-		add += 1;
-	add -= 1;
-	while (add >= 0)
+	pack.total = 0;
+	pack.print = 0;
+	pack.visual = 0;
+	while (argc > 1)
+		if (ft_build_stack(&a, &pack, argv, argc--))
+			return (ft_return_usage());
+	pack.add = 1;
+	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
 	{
-		ft_add_node(ft_create_node(ft_atoi(nums[add])), &a);
-		add -= 1;
+		ft_printf("[Beginning]\n ↓↓↓↓↓↓↓↓↓");
+		ft_print_stacks(a, b);
 	}
-	add = 1;
-	while (add != 0)
+	while (pack.add != 0)
 	{
-		add = get_next_line(0, &line);
+		pack.add = get_next_line(0, &line);
 		if (ft_strcmp(line, "sa") == 0)
-			ft_swap_first_two(&a);
+			ft_swap_a(&a, &pack);
 		if (ft_strcmp(line, "sb") == 0)
-			ft_swap_first_two(&b);
+			ft_swap_b(&b, &pack);
 		if (ft_strcmp(line, "ss") == 0)
-		{
-			ft_swap_first_two(&a);
-			ft_swap_first_two(&b);
-		}
+			ft_swap_both(&a, &b, &pack);
 		if (ft_strcmp(line, "pa") == 0)
-			ft_push_from_to(&b, &a);
+			ft_push_from_b_to_a(&a, &b, &pack);
 		if (ft_strcmp(line, "pb") == 0)
-			ft_push_from_to(&a, &b);
+			ft_push_from_a_to_b(&a, &b, &pack);
 		if (ft_strcmp(line, "ra") == 0)
-			ft_rotate(&a);
+			ft_rotate_a(&a, &pack);
 		if (ft_strcmp(line, "rb") == 0)
-			ft_rotate(&b);
+			ft_rotate_b(&b, &pack);
 		if (ft_strcmp(line, "rr") == 0)
-		{
-			ft_rotate(&a);
-			ft_rotate(&b);
-		}
+			ft_rotate_both(&a, &b, &pack);
 		if (ft_strcmp(line, "rra") == 0)
-			ft_reverse_rotate(&a);
+			ft_reverse_rotate_a(&a, &pack);
 		if (ft_strcmp(line, "rrb") == 0)
-			ft_reverse_rotate(&b);
+			ft_reverse_rotate_b(&b, &pack);
 		if (ft_strcmp(line, "rrr") == 0)
+			ft_reverse_rotate_both(&a, &b, &pack);
+		if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
 		{
-			ft_reverse_rotate(&a);
-			ft_reverse_rotate(&b);
+			ft_printf("[%s]\n", line);
+			if (ft_strlen(line) == 2)
+				ft_printf(" ↓↓");
+			else
+				ft_printf(" ↓↓↓");
+			ft_print_stacks(a, b);
 		}
 	}
 	if (ft_is_sorted(a))

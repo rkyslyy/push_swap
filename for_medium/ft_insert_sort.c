@@ -118,6 +118,7 @@ void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack)
 			ft_if_max(a, b, pack);
 		else
 			ft_for_no_max(a, b, pack, mem);
+		aptr = *a;
 	}
 	ft_empty_b(a, b, pack);
 	ft_last_rotate(a, pack);

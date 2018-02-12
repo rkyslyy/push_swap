@@ -42,7 +42,8 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./checkup/ft_get_max.c			\
 			./checkup/ft_is_swap_good.c		\
 			./checkup/ft_is_sorted.c		\
-			./checkup/ft_pick_rotate.c
+			./checkup/ft_pick_rotate.c		\
+			./validation/ft_is_input_valid.c
 
 FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_large/ft_set_pivot.c		\
@@ -51,7 +52,7 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_medium/ft_last_rotate.c	\
 			./for_medium/ft_insert_sort.c
 
-SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
+SWAPSOURCES = $(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 
 all: $(DO_ALL)
 
