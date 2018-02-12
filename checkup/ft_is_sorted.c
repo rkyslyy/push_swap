@@ -23,7 +23,8 @@ int	ft_is_sorted(t_stack *anchor)
 		if (ptr->next != NULL && ptr->value > ptr->next->value
 			&& ptr->next->value != min)
 			return (0);
-		if (ptr->next == NULL && ptr->value > anchor->value && anchor->value != min)
+		if (ptr->next == NULL && 
+			ptr->value > anchor->value && anchor->value != min)
 			return (0);
 		ptr = ptr->next;
 	}

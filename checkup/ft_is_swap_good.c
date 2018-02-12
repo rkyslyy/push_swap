@@ -45,20 +45,11 @@ int	ft_is_swap_good(t_stack *anchor)
 	last = ptr->value;
 	big = anchor->value;
 	little = anchor->next->value;
-	if ((big == ft_get_max(anchor) && (anchor->next->next->value == ft_get_min(anchor))) ||
+	if ((big == ft_get_max(anchor) &&
+		(anchor->next->next->value == ft_get_min(anchor))) ||
 		(big != ft_get_max(anchor) && (big < anchor->next->next->value)))
-		if (little > last || (little == ft_get_min(anchor) && last == ft_get_max(anchor)))
+		if (little > last || (little == ft_get_min(anchor)
+			&& last == ft_get_max(anchor)))
 			return (1);
-	// if (anchor->value != min && last > anchor->value)
-	// {
-	// 	if (anchor->next->value == min)
-	// 	{
-	// 		if (last == ft_get_max(anchor))
-	// 			return (2);
-	// 	}
-	// 	else
-	// 		if (last < anchor->next->value)
-	// 			return (2);
-	// }
 	return (0);
 }

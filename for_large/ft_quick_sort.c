@@ -4,9 +4,13 @@ static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 {
 	t_stack *ap;
 	t_stack *bp;
+	int		(*f_b)(t_stack *b, int val);
+	int		(*f_g)(t_stack *node, int mem, int pivot);
 
 	ap = *a;
 	bp = *b;
+	f_b = &ft_get_biggest;
+	f_g = &ft_get_next;
 	while (ap->value != p->mem)
 	{
 		if (ap->value <= p->pivot)
@@ -14,8 +18,8 @@ static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 		else
 		{
 			if (bp != NULL && ft_scout(ap, p->mem, p->pivot) &&
-				ft_pick_rotate(bp, ft_get_biggest(bp, ft_get_next(ap, p->mem, p->pivot))) == 1
-				&& bp->value != ft_get_biggest(bp, ft_get_next(ap, p->mem, p->pivot)))
+				ft_pick_rotate(bp, f_b(bp, f_g(ap, p->mem, p->pivot))) == 1
+				&& bp->value != f_b(bp, f_g(ap, p->mem, p->pivot)))
 				ft_rotate_both(a, b, p);
 			else
 				ft_rotate_a(a, p);

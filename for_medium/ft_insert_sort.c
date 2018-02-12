@@ -83,13 +83,15 @@ static void	ft_empty_b(t_stack **a, t_stack **b, t_pack *pack)
 	while (bptr != NULL)
 	{
 		if (ft_pick_rotate(aptr, ft_get_biggest(aptr, bptr->value)) == 1)
-			while (ft_get_last_value(aptr) != ft_get_biggest(aptr, bptr->value))
+			while (ft_get_last_value(aptr) !=
+				ft_get_biggest(aptr, bptr->value))
 			{
 				ft_rotate_a(a, pack);
 				aptr = *a;
 			}
 		else
-			while (ft_get_last_value(aptr) != ft_get_biggest(aptr, bptr->value))
+			while (ft_get_last_value(aptr) !=
+				ft_get_biggest(aptr, bptr->value))
 			{
 				ft_reverse_rotate_a(a, pack);
 				aptr = *a;
@@ -111,6 +113,7 @@ void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack)
 	while (!ft_is_sorted(aptr))
 	{
 		ft_get_to_unsorted(a, &mem, pack);
+		aptr = *a;
 		if (aptr->value == ft_get_max(aptr))
 			ft_if_max(a, b, pack);
 		else

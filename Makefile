@@ -48,7 +48,8 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_large/ft_set_pivot.c		\
 			./for_large/ft_final.c			\
 			./for_large/ft_quick_sort.c		\
-			./for_medium/ft_last_rotate.c
+			./for_medium/ft_last_rotate.c	\
+			./for_medium/ft_insert_sort.c
 
 SWAPSOURCES =	$(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 

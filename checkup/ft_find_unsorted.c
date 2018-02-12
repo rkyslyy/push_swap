@@ -37,15 +37,6 @@ int				ft_find_unsorted(t_stack *anchor, int min, int max, int *mem)
 		ptr = ptr->next;
 	}
 	ptr = anchor;
-	// while (ptr != NULL)
-	// {
-	// 	if (ptr->next != NULL && ptr->value > ptr->next->value && !(ptr->value == max && ptr->next->value == min))
-	// 		break ;
-	// 	if (ptr->next == NULL && ptr->value > anchor->value && !(ptr->value == max && anchor->value == min))
-	// 		break ;
-	// 	gotcha += 1;
-	// 	ptr = ptr->next;
-	// }
 	ptr = ft_search(ptr, anchor, &gotcha);
 	*mem = ptr->value;
 	if (size - gotcha < size / 2)

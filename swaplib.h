@@ -53,7 +53,7 @@ void	ft_swap_a(t_stack **a, t_pack *pack);
 void	ft_swap_b(t_stack **b, t_pack *pack);
 void	ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
-//void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
+void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_last_rotate(t_stack **a, t_pack *pack);
 
 
