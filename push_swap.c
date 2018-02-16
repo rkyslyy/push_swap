@@ -34,17 +34,6 @@ static void ft_swap_rotate(t_stack **a, t_pack *pack)
 		}
 }
 
-static int	ft_return_usage(void)
-{
-	ft_printf("Error\n____________________________________\n");
-	ft_printf("usage: ./push_swap [values] [flags] |\n");
-	ft_printf("                      ^^       ^    |\n");
-	ft_printf("   Range of integer only      -v    |\n");
-	ft_printf("Digits, '-' and '+' only      -o    |\n");
-	ft_printf("____________________________________|\n");
-	return (1);
-}
-
 static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 {
 	char	**nums;
@@ -53,7 +42,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	nums = ft_strsplit(argv[argc - 1], ' ');
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
-	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0)
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
+		|| ft_strcmp(nums[0], "-t") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
@@ -86,7 +76,5 @@ int			main(int argc, char **argv)
 		ft_insert_swap(&a, &b, &pack);
 	else
 		ft_quick_sort(&a, &b, &pack);
-	// ft_print_stacks(a, b);
-	// ft_printf("\nTotal amount of operations: %d\n", pack.total);
 	return (0);
 }

@@ -12,17 +12,6 @@
 
 #include "./swaplib.h"
 
-static int	ft_return_usage(void)
-{
-	ft_printf("Error\n____________________________________\n");
-	ft_printf("Usage: ./push_swap [values] [flags] |\n");
-	ft_printf("                      ^^       ^    |\n");
-	ft_printf("   Range of integer only      -v    |\n");
-	ft_printf("Digits, '-' and '+' only      -o    |\n");
-	ft_printf("____________________________________|\n");
-	return (1);
-}
-
 static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 {
 	char	**nums;
@@ -31,7 +20,7 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	nums = ft_strsplit(argv[argc - 1], ' ');
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
-	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0)
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0 || ft_strcmp(nums[0], "-t") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
@@ -54,14 +43,47 @@ int	main(int argc, char **argv)
 
 	a = NULL;
 	b = NULL;
+	fd = -1;
 	pack.total = 0;
 	pack.print = 0;
 	pack.visual = 0;
 	pack.output = 0;
+	pack.result = 0;
 	while (argc > 1)
 		if (ft_build_stack(&a, &pack, argv, argc--))
 			return (ft_return_usage());
 	pack.add = 1;
+	if (pack.output == 1)
+	{
+		fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC);
+		b = a;
+		ft_putendl_fd("________________________________________________", fd);
+		ft_putendl_fd("Instructions memo:                              |", fd);
+		ft_putendl_fd("sa - swap first two in stack 'A'                |", fd);
+		ft_putendl_fd("sb - swap first two in stack 'B'                |", fd);
+		ft_putendl_fd("ss - swap first two in both stacks              |", fd);
+		ft_putendl_fd("ra - rotate stack 'A'                           |", fd);
+		ft_putendl_fd("rb - rotate stack 'B'                           |", fd);
+		ft_putendl_fd("rr - rotate both stacks                         |", fd);
+		ft_putendl_fd("rra - reverse rotate stack 'A'                  |", fd);
+		ft_putendl_fd("rrb - reverse rotate stack 'B'                  |", fd);
+		ft_putendl_fd("rrr - reverse ratate both stacks                |", fd);
+		ft_putendl_fd("pa - push top value from stack 'B' to stack 'A' |", fd);
+		ft_putendl_fd("pb - push top value form stack 'A' to stack 'B' |", fd);
+		ft_putendl_fd("________________________________________________|", fd);
+		ft_putendl_fd("\n_________________", fd);
+		ft_putendl_fd("Given values are:", fd);
+		while (b != NULL)
+		{
+			ft_putnbr_fd(b->value, fd);
+			ft_putchar_fd(' ', fd);
+			b = b->next;
+		}
+		ft_putendl_fd("\n", fd);
+		ft_putendl_fd("Suggested sorting instructions are:", fd);
+		ft_putendl_fd("____", fd);
+		b = NULL;
+	}
 	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
 	{
 		ft_printf("[Beginning]\n ↓↓↓↓↓↓↓↓↓");
@@ -101,16 +123,31 @@ int	main(int argc, char **argv)
 				ft_printf(" ↓↓↓");
 			ft_print_stacks(a, b);
 		}
-		if (pack.output == 1)
-		{
-			fd = open("output.txt", O_APPEND | O_CREAT, S_IRUSR | S_IWUSR);
-			ft_putstr_fd(line, fd);
-			close(fd);
-		}
+		if (pack.output == 1 && ft_strlen(line))
+			ft_putendl_fd(line, fd);
+	}
+	if (pack.output == 1)
+		ft_putendl_fd("____", fd);
+	if (pack.result == 1)
+	{
+		ft_printf("Total amount of operations: %d\n", pack.total);
+		ft_putstr_fd("Total amount of operations: ", fd);
+		ft_putnbr_fd(pack.total, fd);
+		ft_putchar_fd('\n', fd);
+		ft_putendl_fd("____________________________________", fd);
 	}
 	if (ft_is_sorted(a) && a->value == ft_get_min(a))
+	{
+		if (pack.output == 1)
+			ft_putendl_fd("Values are sorted", fd);
 		ft_printf("OK\n");
+	}
 	else
+	{
+		if (pack.output == 1)
+			ft_putendl_fd("Values are not sorted", fd);
 		ft_printf("KO\n");
+	}
+	close(fd);
 	return (0);
 }

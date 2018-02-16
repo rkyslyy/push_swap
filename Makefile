@@ -43,6 +43,7 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./checkup/ft_is_swap_good.c		\
 			./checkup/ft_is_sorted.c		\
 			./checkup/ft_pick_rotate.c		\
+			./validation/ft_return_usage.c	\
 			./validation/ft_is_input_valid.c
 
 FOR_LARGE = ./for_large/ft_deal_with_b.c	\

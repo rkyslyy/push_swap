@@ -16,10 +16,12 @@ typedef struct		s_pack
 	int				print;
 	int				visual;
 	int				output;
+	int				result;
 }					t_pack;
 
 # include "./libft/libft.h"
 
+int		ft_return_usage(void);
 int		ft_is_input_valid(char **nums, t_pack *pack);
 void 	ft_set_pivot(t_stack *a, t_pack *pack);
 void	ft_deal_with_b(t_stack **b, t_stack **a, t_pack *pack);
