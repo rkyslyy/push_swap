@@ -33,6 +33,35 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	return (0);
 }
 
+static void	ft_make_header(int *fd, t_stack *a)
+{
+	*fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC);
+	ft_putendl_fd("________________________________________________", *fd);
+	ft_putendl_fd("Instructions memo:                              |", *fd);
+	ft_putendl_fd("sa - swap first two in stack 'A'                |", *fd);
+	ft_putendl_fd("sb - swap first two in stack 'B'                |", *fd);
+	ft_putendl_fd("ss - swap first two in both stacks              |", *fd);
+	ft_putendl_fd("ra - rotate stack 'A'                           |", *fd);
+	ft_putendl_fd("rb - rotate stack 'B'                           |", *fd);
+	ft_putendl_fd("rr - rotate both stacks                         |", *fd);
+	ft_putendl_fd("rra - reverse rotate stack 'A'                  |", *fd);
+	ft_putendl_fd("rrb - reverse rotate stack 'B'                  |", *fd);
+	ft_putendl_fd("rrr - reverse ratate both stacks                |", *fd);
+	ft_putendl_fd("pa - push top value from stack 'B' to stack 'A' |", *fd);
+	ft_putendl_fd("pb - push top value form stack 'A' to stack 'B' |", *fd);
+	ft_putendl_fd("________________________________________________|", *fd);
+	ft_putendl_fd("\n_________________\nGiven values are:", *fd);
+	while (a != NULL)
+	{
+		ft_putnbr_fd(a->value, *fd);
+		ft_putchar_fd(' ', *fd);
+		a = a->next;
+	}
+	ft_putendl_fd("\n", *fd);
+	ft_putendl_fd("Suggested sorting instructions are:", *fd);
+	ft_putendl_fd("____", *fd);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*a;
@@ -54,36 +83,7 @@ int	main(int argc, char **argv)
 			return (ft_return_usage());
 	pack.add = 1;
 	if (pack.output == 1)
-	{
-		fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC);
-		b = a;
-		ft_putendl_fd("________________________________________________", fd);
-		ft_putendl_fd("Instructions memo:                              |", fd);
-		ft_putendl_fd("sa - swap first two in stack 'A'                |", fd);
-		ft_putendl_fd("sb - swap first two in stack 'B'                |", fd);
-		ft_putendl_fd("ss - swap first two in both stacks              |", fd);
-		ft_putendl_fd("ra - rotate stack 'A'                           |", fd);
-		ft_putendl_fd("rb - rotate stack 'B'                           |", fd);
-		ft_putendl_fd("rr - rotate both stacks                         |", fd);
-		ft_putendl_fd("rra - reverse rotate stack 'A'                  |", fd);
-		ft_putendl_fd("rrb - reverse rotate stack 'B'                  |", fd);
-		ft_putendl_fd("rrr - reverse ratate both stacks                |", fd);
-		ft_putendl_fd("pa - push top value from stack 'B' to stack 'A' |", fd);
-		ft_putendl_fd("pb - push top value form stack 'A' to stack 'B' |", fd);
-		ft_putendl_fd("________________________________________________|", fd);
-		ft_putendl_fd("\n_________________", fd);
-		ft_putendl_fd("Given values are:", fd);
-		while (b != NULL)
-		{
-			ft_putnbr_fd(b->value, fd);
-			ft_putchar_fd(' ', fd);
-			b = b->next;
-		}
-		ft_putendl_fd("\n", fd);
-		ft_putendl_fd("Suggested sorting instructions are:", fd);
-		ft_putendl_fd("____", fd);
-		b = NULL;
-	}
+		ft_make_header(&fd, a);
 	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
 	{
 		ft_printf("[Beginning]\n ↓↓↓↓↓↓↓↓↓");
