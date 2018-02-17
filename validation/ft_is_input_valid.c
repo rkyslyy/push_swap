@@ -36,29 +36,29 @@ static int	ft_checko(char **nums, size_t n, size_t ptr)
 	return (1);
 }
 
-int	ft_is_input_valid(char **nums, t_pack *pack)
+int	ft_is_input_valid(char **i, t_pack *pack)
 {
 	size_t	n;
 	size_t	ptr;
 	char	*filename;
 
 	ptr = 0;
-	while (nums[ptr] != 0)
+	while (i[ptr] != 0)
 	{
 		n = 0;
-		while (nums[ptr][n] != '\0')
-			if (!ft_checko(nums, n++, ptr))
+		while (i[ptr][n] != '\0')
+			if (!ft_checko(i, n++, ptr))
 				return (0);
-		if (ft_strcmp(nums[ptr], "-v") == 0 || ft_strcmp(nums[ptr], "-o") == 0 ||
-			ft_strcmp(nums[ptr], "-t") == 0 || ft_strcmp(nums[ptr], "-h") == 0 ||
-			(ft_strcmp(nums[ptr], "-r") == 0 && pack->no != 1) ||
-			ft_strcmp(nums[ptr], "-i") == 0)
+		if (ft_strcmp(i[ptr], "-v") == 0 || ft_strcmp(i[ptr], "-o") == 0 ||
+			ft_strcmp(i[ptr], "-t") == 0 || ft_strcmp(i[ptr], "-h") == 0 ||
+			(ft_strcmp(i[ptr], "-r") == 0 && pack->no != 1) ||
+			ft_strcmp(i[ptr], "-i") == 0)
 		{
-			ft_deal(pack, nums[ptr], &filename);
+			ft_deal(pack, i[ptr], &filename);
 			break ;
 		}
-		if (ft_atoi(nums[ptr]) > 2147483647 ||
-			ft_atoi(nums[ptr]) < -2147483648)
+		if (ft_atoi(i[ptr]) > 2147483647 ||
+			ft_atoi(i[ptr]) < -2147483648)
 			return (0);
 		ptr += 1;
 	}
