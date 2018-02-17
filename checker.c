@@ -22,7 +22,7 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 		return (1);
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
 		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0
-		|| ft_strcmp(nums[0], "-r") == 0)
+		|| ft_strcmp(nums[0], "-r") == 0 || ft_strcmp(nums[0], "-i") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
@@ -64,6 +64,28 @@ static void	ft_make_header(int *fd, t_stack *a)
 	ft_putendl_fd("____", *fd);
 }
 
+static void ft_check_conf(char **argv, int argc, t_pack *pack)
+{
+	while (argc != 1)
+	{
+		if (ft_strcmp(argv[argc - 1], "-i") == 0)
+			pack->no = 1;
+		argc -= 1;
+	}
+}
+
+static int	ft_valid_com(char *line)
+{
+	if (ft_strcmp(line, "sa") != 0 && ft_strcmp(line, "sb") != 0 &&
+		ft_strcmp(line, "ss") != 0 && ft_strcmp(line, "ra") != 0 &&
+		ft_strcmp(line, "rb") != 0 && ft_strcmp(line, "rr") != 0 &&
+		ft_strcmp(line, "rra") != 0 && ft_strcmp(line, "rrb") != 0 &&
+		ft_strcmp(line, "rrr") != 0 && ft_strcmp(line, "pa") != 0 &&
+		ft_strcmp(line, "pb") != 0 && line[0] != '\0')
+		return (0);
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*a;
@@ -82,10 +104,15 @@ int	main(int argc, char **argv)
 	pack.result = 0;
 	pack.highlight = 0;
 	pack.read = 0;
+	pack.input = 0;
+	pack.no = 0;
+	ft_check_conf(argv, argc, &pack);
 	while (argc > 1)
 		if (ft_build_stack(&a, &pack, argv, argc--) || pack.read == -1)
 			return (ft_return_usage());
 	pack.add = 1;
+	if (pack.input == 1)
+		pack.read = 1;	
 	if (pack.output == 1)
 		ft_make_header(&fd, a);
 	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
@@ -95,7 +122,20 @@ int	main(int argc, char **argv)
 	}
 	while (pack.add != 0)
 	{
+		if (pack.input == 1)
+			ft_printf("Instruction: ");
 		pack.add = get_next_line(pack.read, &line);
+		if (pack.input == 1 && !ft_valid_com(line))
+			while (!ft_valid_com(line))
+			{
+				ft_printf("Please enter valid instruction: ");
+				pack.add = get_next_line(pack.read, &line);
+			}
+		if (pack.read != 0 && pack.read != 1 && !ft_valid_com(line))
+		{
+			ft_printf("Error\nNext command in instructions file is invalid\n");
+			return (1);
+		}
 		if (ft_strcmp(line, "sa") == 0)
 			ft_swap_a(&a, &pack);
 		if (ft_strcmp(line, "sb") == 0)
@@ -134,7 +174,7 @@ int	main(int argc, char **argv)
 		ft_putendl_fd("____", fd);
 	if (pack.result == 1)
 	{
-		ft_printf("Total amount of operations: %d\n", pack.total);
+		ft_printf("End of sorting\nTotal amount of operations: %d\n", pack.total);
 		ft_printf("___________________________________\n");
 		ft_putstr_fd("Total amount of operations: ", fd);
 		ft_putnbr_fd(pack.total, fd);

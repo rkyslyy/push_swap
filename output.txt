@@ -22,8 +22,9 @@ ____
 ra
 ra
 ra
-sa
+pb
+ra
+pa
+rra
 ____
-Total amount of operations: 4
-____________________________________
 Values are sorted

@@ -44,7 +44,7 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 		return (1);
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
 		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0
-		|| ft_strcmp(nums[0], "-r") == 0)
+		|| ft_strcmp(nums[0], "-r") == 0 || ft_strcmp(nums[0], "-i") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
