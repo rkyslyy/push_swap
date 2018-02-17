@@ -15,25 +15,19 @@ ________________________________________________|
 
 _________________
 Given values are:
-127 37 61 57 24 155 
+184 9 135 156 49 
 
 Suggested sorting instructions are:
 ____
-ra
-pb
-pb
-pb
-pb
-ra
-pa
-ra
-pa
-ra
-pa
 rra
+rra
+ra
+pb
+ra
+ra
 pa
 rra
 ____
-Total amount of operations: 14
+Total amount of operations: 8
 ____________________________________
 Values are sorted

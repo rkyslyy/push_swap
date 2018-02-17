@@ -133,6 +133,7 @@ int	main(int argc, char **argv)
 	if (pack.result == 1)
 	{
 		ft_printf("Total amount of operations: %d\n", pack.total);
+		ft_printf("___________________________________\n");
 		ft_putstr_fd("Total amount of operations: ", fd);
 		ft_putnbr_fd(pack.total, fd);
 		ft_putchar_fd('\n', fd);
