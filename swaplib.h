@@ -18,6 +18,7 @@ typedef struct		s_pack
 	int				output;
 	int				result;
 	int				highlight;
+	int				read;
 }					t_pack;
 
 # include "./libft/libft.h"

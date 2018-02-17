@@ -15,19 +15,15 @@ ________________________________________________|
 
 _________________
 Given values are:
-184 9 135 156 49 
+3 4 5 2 1 
 
 Suggested sorting instructions are:
 ____
-rra
-rra
-ra
-pb
 ra
 ra
-pa
-rra
+ra
+sa
 ____
-Total amount of operations: 8
+Total amount of operations: 4
 ____________________________________
 Values are sorted

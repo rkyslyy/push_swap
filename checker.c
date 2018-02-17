@@ -21,7 +21,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
-		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0)
+		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0
+		|| ft_strcmp(nums[0], "-r") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
@@ -80,8 +81,9 @@ int	main(int argc, char **argv)
 	pack.output = 0;
 	pack.result = 0;
 	pack.highlight = 0;
+	pack.read = 0;
 	while (argc > 1)
-		if (ft_build_stack(&a, &pack, argv, argc--))
+		if (ft_build_stack(&a, &pack, argv, argc--) || pack.read == -1)
 			return (ft_return_usage());
 	pack.add = 1;
 	if (pack.output == 1)
@@ -93,7 +95,7 @@ int	main(int argc, char **argv)
 	}
 	while (pack.add != 0)
 	{
-		pack.add = get_next_line(0, &line);
+		pack.add = get_next_line(pack.read, &line);
 		if (ft_strcmp(line, "sa") == 0)
 			ft_swap_a(&a, &pack);
 		if (ft_strcmp(line, "sb") == 0)
