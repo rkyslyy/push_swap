@@ -32,6 +32,12 @@ static void	ft_if_max(t_stack **a, t_stack **b, t_pack *pack)
 		ft_swap_a(a, pack);
 		aptr = *a;
 	}
+	else if (aptr->next->next->value == ft_get_min(aptr))
+	{
+		ft_rotate_a(a, pack);
+		ft_swap_a(a, pack);
+		aptr = *a;
+	}
 	else
 	{
 		ft_rotate_a(a, pack);
