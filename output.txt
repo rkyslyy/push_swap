@@ -15,10 +15,25 @@ ________________________________________________|
 
 _________________
 Given values are:
-127 37 61 
+127 37 61 57 24 155 
 
 Suggested sorting instructions are:
 ____
 ra
+pb
+pb
+pb
+pb
+ra
+pa
+ra
+pa
+ra
+pa
+rra
+pa
+rra
 ____
+Total amount of operations: 14
+____________________________________
 Values are sorted

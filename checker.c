@@ -20,7 +20,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	nums = ft_strsplit(argv[argc - 1], ' ');
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
-	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0 || ft_strcmp(nums[0], "-t") == 0)
+	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
+		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0)
 		return (0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
@@ -78,6 +79,7 @@ int	main(int argc, char **argv)
 	pack.visual = 0;
 	pack.output = 0;
 	pack.result = 0;
+	pack.highlight = 0;
 	while (argc > 1)
 		if (ft_build_stack(&a, &pack, argv, argc--))
 			return (ft_return_usage());
@@ -87,7 +89,7 @@ int	main(int argc, char **argv)
 	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
 	{
 		ft_printf("[Beginning]\n ↓↓↓↓↓↓↓↓↓");
-		ft_print_stacks(a, b);
+		ft_print_stacks(a, b, "NULL", pack);
 	}
 	while (pack.add != 0)
 	{
@@ -121,7 +123,7 @@ int	main(int argc, char **argv)
 				ft_printf(" ↓↓");
 			else
 				ft_printf(" ↓↓↓");
-			ft_print_stacks(a, b);
+			ft_print_stacks(a, b, line, pack);
 		}
 		if (pack.output == 1 && ft_strlen(line))
 			ft_putendl_fd(line, fd);

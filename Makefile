@@ -27,7 +27,9 @@ OPERATORS =	./operators/ft_push_from_to.c	\
 			./operators/ft_swap_b.c			\
 			./operators/ft_swap_both.c
 
-LISTS =		./lists/ft_print_stacks.c		\
+LISTS =		./lists/for_h/ft_nums_a.c		\
+			./lists/for_h/ft_nums_b.c		\
+			./lists/ft_print_stacks.c		\
 			./lists/ft_add_node.c			\
 			./lists/ft_create_node.c
 

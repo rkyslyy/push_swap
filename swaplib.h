@@ -17,6 +17,7 @@ typedef struct		s_pack
 	int				visual;
 	int				output;
 	int				result;
+	int				highlight;
 }					t_pack;
 
 # include "./libft/libft.h"
@@ -30,7 +31,9 @@ int 	ft_get_next(t_stack *node, int mem, int pivot);
 int		ft_scout(t_stack *node, int mem, int pivot);
 int		ft_get_pivot(t_stack *a, int val);
 int		ft_get_biggest(t_stack *b, int val);
-void	ft_print_stacks(t_stack *a, t_stack *b);
+void	ft_nums_a(t_stack *ptr, t_stack *a, t_pack pack, char const *line);
+void	ft_nums_b(t_stack *ptr, t_stack *b, t_pack pack, char const *line);
+void	ft_print_stacks(t_stack *a, t_stack *b, char const *line, t_pack pack);
 int		ft_get_size(t_stack *a);
 int		ft_get_last_value(t_stack *anchor);
 int		ft_get_min(t_stack *anchor);
