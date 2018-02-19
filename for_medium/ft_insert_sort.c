@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_insert_sort.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/19 17:03:13 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 17:03:34 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../swaplib.h"
 
 static void	ft_get_to_unsorted(t_stack **a, int *mem, t_pack *pack)
@@ -28,15 +40,11 @@ static void	ft_if_max(t_stack **a, t_stack **b, t_pack *pack)
 	bptr = *b;
 	if (aptr->next->next->value == ft_get_min(aptr) &&
 		aptr->next->value > ft_get_last_value(aptr))
-	{
 		ft_swap_a(a, pack);
-		aptr = *a;
-	}
 	else if (aptr->next->next->value == ft_get_min(aptr))
 	{
 		ft_rotate_a(a, pack);
 		ft_swap_a(a, pack);
-		aptr = *a;
 	}
 	else
 	{
@@ -49,6 +57,7 @@ static void	ft_if_max(t_stack **a, t_stack **b, t_pack *pack)
 			bptr = *b;
 		}
 	}
+	aptr = *a;
 }
 
 static void	ft_for_no_max(t_stack **a, t_stack **b, t_pack *pack, int mem)
@@ -108,7 +117,7 @@ static void	ft_empty_b(t_stack **a, t_stack **b, t_pack *pack)
 	}
 }
 
-void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack)
+void		ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack *aptr;
 	t_stack	*bptr;

@@ -14,9 +14,9 @@
 
 int	ft_get_last_value(t_stack *anchor)
 {
-	int ret;
-
+	int		ret;
 	t_stack *ptr;
+
 	ptr = anchor;
 	while (ptr->next != NULL)
 		ptr = ptr->next;

@@ -6,7 +6,7 @@
 /*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 15:22:14 by rkyslyy           #+#    #+#             */
-/*   Updated: 2018/02/07 15:22:14 by rkyslyy          ###   ########.fr       */
+/*   Updated: 2018/02/19 16:59:54 by rkyslyy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int		ft_get_size(t_stack *a)
 {
-	t_stack *ptr;
-	int	size;
+	t_stack	*ptr;
+	int		size;
 
 	ptr = a;
 	size = 0;

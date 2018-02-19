@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_scout.c                                         :+:      :+:    :+:   */
+/*   ft_free_lists.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/19 16:59:23 by rkyslyy           #+#    #+#             */
-/*   Updated: 2018/02/19 16:59:24 by rkyslyy          ###   ########.fr       */
+/*   Created: 2018/02/19 15:04:19 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 15:04:21 by rkyslyy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../swaplib.h"
 
-int	ft_scout(t_stack *node, int mem, int pivot)
+void	ft_free_lists(t_stack *a, t_stack *b)
 {
 	t_stack *ptr;
+	t_stack	*next;
 
-	ptr = node;
-	while (ptr != NULL && ptr->value != mem)
+	ptr = a;
+	while (ptr != NULL)
 	{
-		if (ptr->value < pivot)
-			return (1);
-		ptr = ptr->next;
+		next = ptr->next;
+		free(ptr);
+		ptr = next;
 	}
-	return (0);
+	ptr = b;
+	while (ptr != NULL)
+	{
+		next = ptr->next;
+		free(ptr);
+		ptr = next;
+	}
 }

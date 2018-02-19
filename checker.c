@@ -35,35 +35,6 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	return (0);
 }
 
-static void	ft_make_header(int *fd, t_stack *a)
-{
-	*fd = open("log.txt", O_WRONLY | O_CREAT | O_TRUNC);
-	ft_putendl_fd("________________________________________________", *fd);
-	ft_putendl_fd("Instructions memo:                              |", *fd);
-	ft_putendl_fd("sa - swap first two values in stack 'A'         |", *fd);
-	ft_putendl_fd("sb - swap first two values in stack 'B'         |", *fd);
-	ft_putendl_fd("ss - swap first two in both stacks              |", *fd);
-	ft_putendl_fd("ra - rotate stack 'A'                           |", *fd);
-	ft_putendl_fd("rb - rotate stack 'B'                           |", *fd);
-	ft_putendl_fd("rr - rotate both stacks                         |", *fd);
-	ft_putendl_fd("rra - reverse rotate stack 'A'                  |", *fd);
-	ft_putendl_fd("rrb - reverse rotate stack 'B'                  |", *fd);
-	ft_putendl_fd("rrr - reverse ratate both stacks                |", *fd);
-	ft_putendl_fd("pa - push top value from stack 'B' to stack 'A' |", *fd);
-	ft_putendl_fd("pb - push top value form stack 'A' to stack 'B' |", *fd);
-	ft_putendl_fd("________________________________________________|", *fd);
-	ft_putendl_fd("\n_________________\nGiven values are:", *fd);
-	while (a != NULL)
-	{
-		ft_putnbr_fd(a->value, *fd);
-		ft_putchar_fd(' ', *fd);
-		a = a->next;
-	}
-	ft_putendl_fd("\n", *fd);
-	ft_putendl_fd("Suggested sorting instructions are:", *fd);
-	ft_putendl_fd("____", *fd);
-}
-
 static void ft_check_conf(char **argv, int argc, t_pack *pack)
 {
 	while (argc != 1)
@@ -182,35 +153,6 @@ static void	ft_vis_stacks(t_pack pack, char *line, t_stack *a, t_stack *b)
 	}
 }
 
-static int	ft_result(t_pack pack, int fd, t_stack *a)
-{
-	if (pack.output == 1)
-		ft_putendl_fd("____", fd);
-	if (pack.result == 1)
-	{
-		ft_printf("End of sorting\nTotal amount of operations: %d\n", pack.total);
-		ft_printf("___________________________________\n");
-		ft_putstr_fd("Total amount of operations: ", fd);
-		ft_putnbr_fd(pack.total, fd);
-		ft_putchar_fd('\n', fd);
-		ft_putendl_fd("____________________________________", fd);
-	}
-	if (ft_is_sorted(a) && a->value == ft_get_min(a))
-	{
-		if (pack.output == 1)
-			ft_putendl_fd("Values are sorted", fd);
-		ft_printf("OK\n");
-	}
-	else
-	{
-		if (pack.output == 1)
-			ft_putendl_fd("Values are not sorted", fd);
-		ft_printf("KO\n");
-	}
-	close(fd);
-	return (0);
-}
-
 static void	ft_shmatok(t_pack *pack, int *fd, t_stack *a, t_stack *b)
 {
 	pack->add = 1;
@@ -235,20 +177,22 @@ int	main(int argc, char **argv)
 
 	ft_assign(&pack, &a, &b, &fd);
 	ft_check_conf(argv, argc, &pack);
-	while (argc > 1)
-		if (ft_build_stack(&a, &pack, argv, argc--) || pack.read == -1)
-			return (ft_return_usage());
-	if (!ft_check_unique(a))
-		return (ft_return_usage());
+	pack.ac = argc;
+	while (pack.ac > 1)
+		if (ft_build_stack(&a, &pack, argv, pack.ac--) || pack.read == -1)
+			return (ft_return_error(argc));
+	if (argc < 2 || !ft_check_unique(a))
+		return (ft_return_error(argc));
 	ft_shmatok(&pack, &fd, a, b);
 	while (pack.add != 0)
 	{
 		if (ft_get_insts(&pack, &line))
-			return (ft_return_usage());
+			return (ft_return_error(argc));
 		ft_apply(line, &a, &b, &pack);
 		ft_vis_stacks(pack, line, a, b);
 		if (pack.output == 1 && ft_strlen(line))
 			ft_putendl_fd(line, fd);
+		free(line);
 	}
-	return (ft_result(pack, fd, a));
+	return (ft_result(pack, fd, a, b));
 }

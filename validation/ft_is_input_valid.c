@@ -27,28 +27,42 @@ static void	ft_deal(t_pack *pack, char *num, char **filename)
 
 static int	ft_checko(char **nums, size_t n, size_t ptr)
 {
-	if (!ft_isdigit(nums[ptr][n]) && nums[ptr][n] != '+' &&
+	if ((!ft_isdigit(nums[ptr][n]) && nums[ptr][n] != '+' &&
 		nums[ptr][n] != '-' && ft_strcmp(nums[ptr], "-v") != 0 &&
 		ft_strcmp(nums[ptr], "-o") != 0 && ft_strcmp(nums[ptr], "-t") != 0
 		&& ft_strcmp(nums[ptr], "-h") != 0 && ft_strcmp(nums[ptr], "-r") != 0
-		&& ft_strcmp(nums[ptr], "-i") != 0)
+		&& ft_strcmp(nums[ptr], "-i") != 0) || (ft_strcmp(nums[ptr], "-") == 0
+		|| ft_strcmp(nums[ptr], "+") == 0))
 		return (0);
 	return (1);
 }
 
+static int	ft_check_char(char **i, size_t ptr)
+{
+	int		sign;
+	size_t	n;
+
+	n = 0;
+	sign = 0;
+	while (i[ptr][n] != '\0')
+	{
+		if (i[ptr][n] == '-' || i[ptr][n] == '+')
+			sign += 1;
+		if (!ft_checko(i, n++, ptr) || sign > 1)
+			return (0);
+	}
+	return (1);
+}
 int	ft_is_input_valid(char **i, t_pack *pack)
 {
-	size_t	n;
 	size_t	ptr;
 	char	*filename;
-
+	
 	ptr = 0;
 	while (i[ptr] != 0)
 	{
-		n = 0;
-		while (i[ptr][n] != '\0')
-			if (!ft_checko(i, n++, ptr))
-				return (0);
+		if (!ft_check_char(i, ptr))
+			return (0);
 		if (ft_strcmp(i[ptr], "-v") == 0 || ft_strcmp(i[ptr], "-o") == 0 ||
 			ft_strcmp(i[ptr], "-t") == 0 || ft_strcmp(i[ptr], "-h") == 0 ||
 			(ft_strcmp(i[ptr], "-r") == 0 && pack->no != 1) ||

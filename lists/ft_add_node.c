@@ -1,6 +1,14 @@
-/*
-***	Takes a new node as first argument and adds it to a linked stack which is pointed on by second argument
- */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_add_node.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/19 17:37:09 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 17:37:17 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../swaplib.h"
 

@@ -12,12 +12,12 @@
 
 #include "./swaplib.h"
 
-static void ft_swap_rotate(t_stack **a, t_pack *pack)
+static void	ft_swap_rotate(t_stack **a, t_pack *pack)
 {
 	t_stack *ptr;
 
 	ptr = *a;
-	if (ptr->value > ptr->next->value && !ft_is_sorted(ptr))
+	if (!ft_is_sorted(ptr))
 		ft_swap_a(a, pack);
 	ptr = *a;
 	if (ft_pick_rotate(ptr, ft_get_min(ptr)) == 1)
@@ -57,6 +57,26 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 	return (0);
 }
 
+static int	ft_check_unique(t_stack *a)
+{
+	t_stack *ptr;
+	int		mem;
+
+	while (a != NULL)
+	{
+		mem = a->value;
+		ptr = a;
+		while (ptr != NULL)
+		{
+			ptr = ptr->next;
+			if (ptr != NULL && ptr->value == mem)
+				return (0);
+		}
+		a = a->next;
+	}
+	return (1);
+}
+
 int			main(int argc, char **argv)
 {
 	t_stack	*a;
@@ -68,14 +88,18 @@ int			main(int argc, char **argv)
 	pack.total = 0;
 	pack.print = 1;
 	pack.visual = 0;
-	while (argc > 1)
-		if (ft_build_stack(&a, &pack, argv, argc--))
-			return (ft_return_usage());
+	pack.ac = argc;
+	while (pack.ac > 1)
+		if (ft_build_stack(&a, &pack, argv, pack.ac--))
+			return (ft_return_error(argc));
+	if (argc < 2 || !ft_check_unique(a))
+		return (ft_return_error(argc));
 	if (ft_get_size(a) <= 3)
 		ft_swap_rotate(&a, &pack);
 	else if (ft_get_size(a) <= 10)
 		ft_insert_swap(&a, &b, &pack);
 	else
 		ft_quick_sort(&a, &b, &pack);
+	ft_free_lists(a, b);
 	return (0);
 }

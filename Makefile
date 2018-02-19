@@ -11,7 +11,6 @@ OPTIONS = -Wall -Wextra -Werror
 LIBFT =		./libft/libft.a
 
 OPERATORS =	./operators/ft_push_from_to.c	\
-			./operators/ft_push_till_big.c	\
 			./operators/ft_reverse_rotate.c	\
 			./operators/ft_rotate.c			\
 			./operators/ft_swap_first_two.c	\
@@ -31,7 +30,10 @@ LISTS =		./lists/for_h/ft_nums_a.c		\
 			./lists/for_h/ft_nums_b.c		\
 			./lists/ft_print_stacks.c		\
 			./lists/ft_add_node.c			\
-			./lists/ft_create_node.c
+			./lists/ft_create_node.c		\
+			./lists/ft_free_lists.c			\
+			./for_log/ft_make_header.c		\
+			./for_log/ft_result.c
 
 CHECKUP =	./checkup/ft_get_next.c			\
 			./checkup/ft_find_unsorted.c	\

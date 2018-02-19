@@ -1,44 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_is_swap_good.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/19 16:58:18 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 16:58:20 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../swaplib.h"
-
-// static int	ft_how_many(t_stack *anchor, int ft_get_max(anchor), int min)
-// {
-// 	t_stack *ptr;
-// 	int		mem;
-// 	int		ret;
-
-// 	ptr = anchor;
-// 	mem = ptr->value;
-// 	ret = 0;
-// 	if (mem == ft_get_max(anchor))
-// 		while (ptr->value != min)
-// 		{
-// 			ptr = ptr->next;
-// 			if (ptr->value == min)
-// 				break ;
-// 			ret += 1;
-// 		}
-// 	else
-// 		while (ptr->value <= mem)
-// 		{
-// 			ptr = ptr->next;
-// 			if (ptr->value > mem)
-// 				break ;
-// 			ret += 1;
-// 		}
-// 	return (ret);
-// }
 
 int	ft_is_swap_good(t_stack *anchor)
 {
 	int		big;
 	int		little;
+	int		last;
+	t_stack	*ptr;
 
 	big = anchor->value;
 	little = anchor->next->value;
 	if (big > little && big < anchor->next->next->value)
 		return (1);
-	int		last;
-	t_stack	*ptr;
 	ptr = anchor;
 	while (ptr->next != NULL)
 		ptr = ptr->next;

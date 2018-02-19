@@ -1,6 +1,14 @@
-/*
-***	Checks which rotating is preferable: reverse (last becomes first) or regular one (first becomes last)
- */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_pick_rotate.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/19 16:58:50 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 16:59:04 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../swaplib.h"
 

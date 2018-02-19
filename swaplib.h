@@ -21,11 +21,14 @@ typedef struct		s_pack
 	int				read;
 	int				input;
 	int				no;
+	int				ac;
 }					t_pack;
 
 # include "./libft/libft.h"
 
-int		ft_return_usage(void);
+void	ft_make_header(int *fd, t_stack *a);
+int		ft_result(t_pack pack, int fd, t_stack *a, t_stack *b);
+int		ft_return_error(int argc);
 int		ft_is_input_valid(char **nums, t_pack *pack);
 void 	ft_set_pivot(t_stack *a, t_pack *pack);
 void	ft_deal_with_b(t_stack **b, t_stack **a, t_pack *pack);
@@ -67,6 +70,8 @@ void	ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
 void	ft_last_rotate(t_stack **a, t_pack *pack);
+void	ft_free_lists(t_stack *a, t_stack *b);
+
 
 
 

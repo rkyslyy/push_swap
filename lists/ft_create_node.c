@@ -1,6 +1,14 @@
-/*
-***	Takes integer value as a parameter, allocates a new t_stack node containing this value and returns it
- */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_create_node.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/19 17:36:43 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 17:37:00 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../swaplib.h"
 
