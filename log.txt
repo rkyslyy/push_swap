@@ -1,7 +1,7 @@
 ________________________________________________
 Instructions memo:                              |
-sa - swap first two in stack 'A'                |
-sb - swap first two in stack 'B'                |
+sa - swap first two values in stack 'A'         |
+sb - swap first two values in stack 'B'         |
 ss - swap first two in both stacks              |
 ra - rotate stack 'A'                           |
 rb - rotate stack 'B'                           |
@@ -15,23 +15,14 @@ ________________________________________________|
 
 _________________
 Given values are:
-6 5 4 3 2 
+3 2 1 
 
 Suggested sorting instructions are:
 ____
 ra
-pb
-pb
-pb
 ra
-pa
-ra
-pa
-ra
-pa
-ra
-ra
+sa
+rra
+sa
 ____
-Total amount of operations: 12
-____________________________________
-Values are sorted
+Values are not sorted

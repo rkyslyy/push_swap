@@ -55,7 +55,14 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_large/ft_final.c			\
 			./for_large/ft_quick_sort.c		\
 			./for_medium/ft_last_rotate.c	\
-			./for_medium/ft_insert_sort.c
+			./for_medium/ft_insert_sort.c	\
+			./for_checker/ft_check_conf.c	\
+			./for_checker/ft_get_insts.c	\
+			./for_checker/ft_shmatok.c		\
+			./for_checker/ft_valid_com.c	\
+			./for_checker/ft_vis_stacks.c	\
+			./for_checker/ft_free_nums.c
+
 
 SWAPSOURCES = $(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 

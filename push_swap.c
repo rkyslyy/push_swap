@@ -40,6 +40,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 
 	pack->add = 0;
 	nums = ft_strsplit(argv[argc - 1], ' ');
+	if (nums[0] == 0)
+		return (0);
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
@@ -54,6 +56,7 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 		ft_add_node(ft_create_node(ft_atoi(nums[pack->add])), a);
 		pack->add -= 1;
 	}
+	ft_free_nums(nums);
 	return (0);
 }
 
@@ -92,7 +95,7 @@ int			main(int argc, char **argv)
 	while (pack.ac > 1)
 		if (ft_build_stack(&a, &pack, argv, pack.ac--))
 			return (ft_return_error(argc));
-	if (argc < 2 || !ft_check_unique(a))
+	if (argc < 2 || ft_get_size(a) == 0 || !ft_check_unique(a))
 		return (ft_return_error(argc));
 	if (ft_get_size(a) <= 3)
 		ft_swap_rotate(&a, &pack);

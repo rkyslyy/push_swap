@@ -41,7 +41,7 @@ static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 	}
 }
 
-static void	ft_shmatok(t_stack **a, t_stack **b, t_pack *pack)
+static void	ft_shmatochok(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack *aptr;
 	t_stack *bptr;
@@ -80,7 +80,7 @@ void		ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 		bptr = *b;
 		if (aptr->value <= pack->pivot)
 			ft_deal_with_b(b, a, pack);
-		ft_shmatok(a, b, pack);
+		ft_shmatochok(a, b, pack);
 		aptr = *a;
 		bptr = *b;
 	}

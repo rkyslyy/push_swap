@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_is_input_valid.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/20 13:12:17 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/20 13:12:18 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../swaplib.h"
 
 static void	ft_deal(t_pack *pack, char *num, char **filename)
@@ -53,11 +65,12 @@ static int	ft_check_char(char **i, size_t ptr)
 	}
 	return (1);
 }
-int	ft_is_input_valid(char **i, t_pack *pack)
+
+int			ft_is_input_valid(char **i, t_pack *pack)
 {
 	size_t	ptr;
 	char	*filename;
-	
+
 	ptr = 0;
 	while (i[ptr] != 0)
 	{

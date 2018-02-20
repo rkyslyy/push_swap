@@ -18,6 +18,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 
 	pack->add = 0;
 	nums = ft_strsplit(argv[argc - 1], ' ');
+	if (nums[0] == 0)
+		return (0);
 	if (!ft_is_input_valid(nums, pack))
 		return (1);
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
@@ -32,29 +34,8 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 		ft_add_node(ft_create_node(ft_atoi(nums[pack->add])), a);
 		pack->add -= 1;
 	}
+	ft_free_nums(nums);
 	return (0);
-}
-
-static void ft_check_conf(char **argv, int argc, t_pack *pack)
-{
-	while (argc != 1)
-	{
-		if (ft_strcmp(argv[argc - 1], "-i") == 0)
-			pack->no = 1;
-		argc -= 1;
-	}
-}
-
-static int	ft_valid_com(char *line)
-{
-	if (ft_strcmp(line, "sa") != 0 && ft_strcmp(line, "sb") != 0 &&
-		ft_strcmp(line, "ss") != 0 && ft_strcmp(line, "ra") != 0 &&
-		ft_strcmp(line, "rb") != 0 && ft_strcmp(line, "rr") != 0 &&
-		ft_strcmp(line, "rra") != 0 && ft_strcmp(line, "rrb") != 0 &&
-		ft_strcmp(line, "rrr") != 0 && ft_strcmp(line, "pa") != 0 &&
-		ft_strcmp(line, "pb") != 0 && line[0] != '\0')
-		return (0);
-	return (1);
 }
 
 static int	ft_check_unique(t_stack *a)
@@ -103,7 +84,7 @@ static void	ft_apply(char *line, t_stack **a, t_stack **b, t_pack *pack)
 		ft_reverse_rotate_both(a, b, pack);
 }
 
-static void ft_assign(t_pack *pack, t_stack **a, t_stack **b, int *fd)
+static void	ft_assign(t_pack *pack, t_stack **a, t_stack **b, int *fd)
 {
 	*a = NULL;
 	*b = NULL;
@@ -119,55 +100,7 @@ static void ft_assign(t_pack *pack, t_stack **a, t_stack **b, int *fd)
 	pack->no = 0;
 }
 
-static int	ft_get_insts(t_pack *pack, char **line)
-{
-	if (pack->input == 1)
-		ft_printf("Instruction: ");
-	pack->add = get_next_line(pack->read, line);
-	if (pack->input == 1 && !ft_valid_com(*line))
-		while (!ft_valid_com(*line))
-		{
-			ft_printf("Please enter valid instruction: ");
-			pack->add = get_next_line(pack->read, line);
-		}
-	if (pack->read == 0 && !ft_valid_com(*line))
-		return (1);
-	if (pack->read != 0 && pack->read != 1 && !ft_valid_com(*line))
-	{
-		ft_printf("Next command in instructions file is invalid\n");
-		return (1);
-	}
-	return (0);
-}
-
-static void	ft_vis_stacks(t_pack pack, char *line, t_stack *a, t_stack *b)
-{
-	if (pack.print == 0 && pack.visual == 1 && pack.add != 0)
-	{
-		ft_printf("[%s]\n", line);
-		if (ft_strlen(line) == 2)
-			ft_printf(" ↓↓");
-		else
-			ft_printf(" ↓↓↓");
-		ft_print_stacks(a, b, line, pack);
-	}
-}
-
-static void	ft_shmatok(t_pack *pack, int *fd, t_stack *a, t_stack *b)
-{
-	pack->add = 1;
-	if (pack->input == 1)
-		pack->read = 1;	
-	if (pack->output == 1)
-		ft_make_header(fd, a);
-	if (pack->print == 0 && pack->visual == 1 && pack->add != 0)
-	{
-		ft_printf("[Beginning]\n ↓↓↓↓↓↓↓↓↓");
-		ft_print_stacks(a, b, "NULL", *pack);
-	}
-}
-
-int	main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_stack	*a;
 	t_stack	*b;
@@ -177,11 +110,10 @@ int	main(int argc, char **argv)
 
 	ft_assign(&pack, &a, &b, &fd);
 	ft_check_conf(argv, argc, &pack);
-	pack.ac = argc;
 	while (pack.ac > 1)
 		if (ft_build_stack(&a, &pack, argv, pack.ac--) || pack.read == -1)
 			return (ft_return_error(argc));
-	if (argc < 2 || !ft_check_unique(a))
+	if (argc < 2 || ft_get_size(a) == 0 || !ft_check_unique(a))
 		return (ft_return_error(argc));
 	ft_shmatok(&pack, &fd, a, b);
 	while (pack.add != 0)
