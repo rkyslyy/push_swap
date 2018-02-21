@@ -38,7 +38,7 @@ typedef struct		s_pack
 	int				ac;
 }					t_pack;
 
-void				ft_free_nums(char **nums);
+int					ft_free_nums(char **nums, int ret);
 void				ft_check_conf(char **argv, int argc, t_pack *pack);
 int					ft_get_insts(t_pack *pack, char **line);
 void				ft_shmatok(t_pack *pack, int *fd, t_stack *a, t_stack *b);

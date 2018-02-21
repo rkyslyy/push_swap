@@ -43,15 +43,18 @@ OBJECTS = ./ft_atoi.o ./ft_bzero.o ./ft_ch.o ./ft_filler.o ./ft_isalnum.o ./ft_i
 all: $(NAME)
 
 $(NAME):
-				@ make re -C ./ft_printf
+				@ make -C ./ft_printf
 				@ gcc $(FLAGS) $(OPTIONS) $(SOURCES)
 				@ ar rc $(NAME) $(OBJECTS) ./ft_printf/*.o
 				@ ranlib $(NAME)
 clean:
 				@ /bin/rm -f $(OBJECTS)
+				@ /bin/rm -f ./ft_printf/*.o
 
 fclean:	clean
 				@ /bin/rm -f $(FT_PRINTF)
 				@ /bin/rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: clean all fclean re

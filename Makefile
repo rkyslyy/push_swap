@@ -1,4 +1,4 @@
-DO_ALL = do_all
+DO_ALL = $(SWAP_NAME) $(CHECKER_NAME)
 
 SWAP_NAME = push_swap
 
@@ -56,12 +56,12 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./for_large/ft_quick_sort.c		\
 			./for_medium/ft_last_rotate.c	\
 			./for_medium/ft_insert_sort.c	\
-			./for_checker/ft_check_conf.c	\
-			./for_checker/ft_get_insts.c	\
-			./for_checker/ft_shmatok.c		\
-			./for_checker/ft_valid_com.c	\
-			./for_checker/ft_vis_stacks.c	\
-			./for_checker/ft_free_nums.c
+			./main_files/ft_check_conf.c	\
+			./main_files/ft_get_insts.c		\
+			./main_files/ft_shmatok.c		\
+			./main_files/ft_valid_com.c		\
+			./main_files/ft_vis_stacks.c	\
+			./main_files/ft_free_nums.c
 
 
 SWAPSOURCES = $(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
@@ -69,14 +69,18 @@ SWAPSOURCES = $(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)
 all: $(DO_ALL)
 
 $(DO_ALL):
-				@ make re -C libft
-				@ gcc $(OPTIONS) $(SWAPSOURCES) ./push_swap.c -o $(SWAP_NAME)
-				@ gcc $(OPTIONS) $(SWAPSOURCES) ./checker.c -o $(CHECKER_NAME)
+				@ make -C libft
+				@ gcc $(OPTIONS) $(SWAPSOURCES) ./main_files/push_swap.c -o $(SWAP_NAME)
+				@ gcc $(OPTIONS) $(SWAPSOURCES) ./main_files/checker.c -o $(CHECKER_NAME)
 
 clean:
-				@ make fclean -C libft
+				@ make clean -C libft
+				@ rm -f log.txt
 
 fclean: clean
 				@ /bin/rm -f $(SWAP_NAME) $(CHECKER_NAME)
+				@ make fclean -C libft
 
 re: fclean all
+
+.PHONY: clean all fclean re
