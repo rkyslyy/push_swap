@@ -29,7 +29,8 @@ void	ft_nums_b(t_stack *ptr, t_stack *b, t_pack pack, char const *line)
 			ptr == b)
 			ft_printf(" ⇔ ");
 		else
-			ft_printf(" ‿ ");
+			if (ptr->next != NULL)
+				ft_printf(" ‿ ");
 		ptr = ptr->next;
 	}
 }

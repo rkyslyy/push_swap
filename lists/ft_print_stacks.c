@@ -88,11 +88,11 @@ void		ft_print_stacks(t_stack *a, t_stack *b, char const *l, t_pack pack)
 	ft_printf("a");
 	ft_after_a(pack, l);
 	ft_nums_a(ptr, a, pack, l);
-	ft_printf("NULL\n");
+	ft_printf("|\n");
 	ptr = b;
 	ft_before_b(pack, l);
 	ft_printf("b");
 	ft_after_b(pack, l);
 	ft_nums_b(ptr, b, pack, l);
-	ft_printf("NULL\n\n");
+	ft_printf("|\n\n");
 }

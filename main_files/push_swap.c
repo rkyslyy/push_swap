@@ -111,78 +111,48 @@ int		ft_check_back(t_stack *a, int superlast)
 	return (1);
 }
 
+int		ft_check_if(t_stack *a, int val)
+{
+	t_stack *ptr;
+
+	ptr = a;
+	while (ptr != NULL)
+	{
+		if (ptr->value < val)
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
 void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 {
-	int		pivot;
 	t_stack	*aptr;
 	t_stack *bptr;
-	int		last;
-	int		superlast;
 
-	pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
-	ft_printf("pivot is %d\n", pivot);
 	aptr = *a;
 	bptr = *b;
-	superlast = ft_get_last_value(aptr);
-	while (aptr->value != pivot)
+	while (aptr != NULL && !ft_is_sorted(aptr))
 	{
-		if (aptr->value > pivot || !ft_check_front(aptr, pivot))
+		ft_set_pivot(aptr, pack);
+		while (ft_get_min(aptr) < pack->pivot)
 		{
-			ft_deal_with_b(b, a, pack);
+			if (ft_pick_rotate(aptr, ft_get_min(aptr)) == 1)
+				while (aptr->value != ft_get_min(aptr))
+				{
+					ft_rotate_a(a, pack);
+					aptr = *a;
+				}
+			else
+				while (aptr->value != ft_get_min(aptr))
+				{
+					ft_reverse_rotate_a(a, pack);
+					aptr = *a;
+				}
+			ft_push_from_a_to_b(a, b, pack);
 			aptr = *a;
 			bptr = *b;
 		}
-		else
-		{
-			if (bptr != NULL && bptr->value > aptr->value && bptr->value < pivot)
-			{
-				ft_rotate_a(a, pack);
-				ft_push_from_b_to_a(a, b, pack);
-				bptr = *b;
-				aptr = *a;
-			}
-			else
-			{
-				ft_rotate_a(a, pack);
-				aptr = *a;
-			}
-		}
-		while (bptr != NULL && bptr->value != ft_get_min(bptr))
-		{
-			ft_rotate_b(b, pack);
-			bptr = *b;
-		}
-	}
-	last = ft_get_last_value(aptr);
-	while (aptr->value != last)
-	{
-		if (aptr->value < pivot || (!ft_check_back(aptr, superlast) && aptr->value != pivot))
-		{
-			ft_deal_with_b(b, a, pack);
-			aptr = *a;
-			bptr = *b;
-		}
-		else
-		{
-			if (bptr != NULL && bptr->value > aptr->value && bptr->value < superlast)
-			{
-				ft_rotate_a(a, pack);
-				ft_push_from_b_to_a(a, b, pack);
-				bptr = *b;
-				aptr = *a;
-			}
-			else
-			{
-				ft_rotate_a(a, pack);
-				aptr = *a;
-			}
-		}
-		while (bptr != NULL && bptr->value != ft_get_min(bptr))
-		{
-			ft_rotate_b(b, pack);
-			bptr = *b;
-		}
-		aptr = aptr->next;
 	}
 	ft_print_stacks(*a, *b, "line", *pack);
 }
@@ -210,7 +180,7 @@ int			main(int argc, char **argv)
 	else if (ft_get_size(a) <= 10)
 		ft_insert_swap(&a, &b, &pack);
 	else
-		ft_fast_af_boi(&a, &b, &pack);
+		ft_quick_sort(&a, &b, &pack);
 	ft_free_lists(a, b);
 	return (0);
 }
