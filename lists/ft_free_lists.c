@@ -12,6 +12,15 @@
 
 #include "../swaplib.h"
 
+void	ft_del_node(t_stack **anchor)
+{
+	t_stack *ptr;
+
+	ptr = *anchor;
+	*anchor = ptr->next;
+	free(ptr);
+}
+
 void	ft_free_lists(t_stack *a, t_stack *b)
 {
 	t_stack *ptr;

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "../swaplib.h"
 
 static void	ft_swap_rotate(t_stack **a, t_pack *pack)
@@ -125,37 +126,367 @@ int		ft_check_if(t_stack *a, int val)
 	return (0);
 }
 
-void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
-{
-	t_stack	*aptr;
-	t_stack *bptr;
+// int		ft_new_pivot(t_stack *a, int tail)
+// {
+// 	int		size;
+// 	int		min;
+// 	int		max;
+// 	int		count;
+// 	int		ret;
+// 	int		mem;
+// 	t_stack	*ptr;
 
-	aptr = *a;
-	bptr = *b;
-	while (aptr != NULL && !ft_is_sorted(aptr))
-	{
-		ft_set_pivot(aptr, pack);
-		while (ft_get_min(aptr) < pack->pivot)
-		{
-			if (ft_pick_rotate(aptr, ft_get_min(aptr)) == 1)
-				while (aptr->value != ft_get_min(aptr))
-				{
-					ft_rotate_a(a, pack);
-					aptr = *a;
-				}
-			else
-				while (aptr->value != ft_get_min(aptr))
-				{
-					ft_reverse_rotate_a(a, pack);
-					aptr = *a;
-				}
-			ft_push_from_a_to_b(a, b, pack);
-			aptr = *a;
-			bptr = *b;
-		}
-	}
-	ft_print_stacks(*a, *b, "line", *pack);
-}
+// 	size = 0;
+// 	ptr = a;
+// 	while (ptr->value != tail)
+// 	{
+// 		size += 1;
+// 		ptr = ptr->next;
+// 	}
+// 	ptr = a;
+// 	min = ptr->value;
+// 	while (ptr->value != tail)
+// 	{
+// 		if (ptr->value < min)
+// 			min = ptr->value;
+// 		ptr = ptr->next;
+// 	}
+// 	ptr = a;
+// 	max = ptr->value;
+// 	while (ptr->value != tail)
+// 	{
+// 		if (ptr->value > max)
+// 			max = ptr->value;
+// 		ptr = ptr->next;
+// 	}
+// 	count = 0;
+// 	ptr = a;
+// 	mem = min;
+// 	ret = max;
+// 	while (count < (size / 2))
+// 	{
+// 		ptr = a;
+// 		ret = max;
+// 		while (ptr->value != tail)
+// 		{
+// 			if (ptr->value < ret && ptr->value > mem)
+// 				ret = ptr->value;
+// 			ptr = ptr->next;
+// 		}
+// 		mem = ret;
+// 		count += 1;
+// 	}
+// 	return (ret);
+// }
+
+// void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
+// {
+// 	t_stack	*aptr;
+// 	t_stack	*bptr;
+// 	int		pivot;
+// 	int		tail;
+
+// 	aptr = *a;
+// 	bptr = *b;
+// 	pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
+// 	tail = ft_get_last_value(aptr);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	ft_rotate_a(a, pack);
+// 	aptr = *a;
+// 	pivot = ft_new_pivot(aptr, tail);
+// 	printf("from %d tp %d\n", aptr->value, tail);
+// 	printf("pivot is %d\n", pivot);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	ft_rotate_a(a, pack);
+// 	aptr = *a;
+// 	pivot = ft_new_pivot(aptr, tail);
+// 	printf("from %d tp %d\n", aptr->value, tail);
+// 	printf("pivot is %d\n", pivot);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	ft_rotate_a(a, pack);
+// 	aptr = *a;
+// 	pivot = ft_new_pivot(aptr, tail);
+// 	printf("from %d tp %d\n", aptr->value, tail);
+// 	printf("pivot is %d\n", pivot);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	ft_rotate_a(a, pack);
+// 	aptr = *a;
+// 	pivot = ft_new_pivot(aptr, tail);
+// 	printf("from %d tp %d\n", aptr->value, tail);
+// 	printf("pivot is %d\n", pivot);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// 	ft_rotate_a(a, pack);
+// 	aptr = *a;
+// 	pivot = ft_new_pivot(aptr, tail);
+// 	printf("from %d tp %d\n", aptr->value, tail);
+// 	printf("pivot is %d\n", pivot);
+// 	while (aptr->value != tail)
+// 	{
+// 		if (aptr->value >= pivot)
+// 		{
+// 			ft_push_from_a_to_b(a, b, pack);
+// 			aptr = *a;
+// 			bptr = *b;
+// 		}
+// 		else
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			aptr = *a;
+// 		}
+// 	}
+// 	if (aptr->value >= pivot)
+// 	{
+// 		ft_push_from_a_to_b(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	else
+// 	{
+// 		ft_rotate_a(a, pack);
+// 		aptr = *a;
+// 	}
+// 	if (ft_pick_rotate(aptr, ft_get_min(bptr)) == 1)
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
+// 		{
+// 			ft_reverse_rotate_b(b, pack);
+// 			bptr = *b;
+// 		}
+// 	tail = bptr->value;
+// 	while (bptr != NULL)
+// 	{
+// 		ft_push_from_b_to_a(a, b, pack);
+// 		aptr = *a;
+// 		bptr = *b;
+// 	}
+// 	ft_print_stacks(*a, *b, "NULL", *pack);
+// }
 
 
 int			main(int argc, char **argv)
@@ -180,7 +511,7 @@ int			main(int argc, char **argv)
 	else if (ft_get_size(a) <= 10)
 		ft_insert_swap(&a, &b, &pack);
 	else
-		ft_quick_sort(&a, &b, &pack);
+		ft_fast_af_boi(&a, &b, &pack);
 	ft_free_lists(a, b);
 	return (0);
 }

@@ -72,6 +72,7 @@ int					ft_find_unsorted(t_stack *anchor, int min,
 int					ft_range(t_stack **a, int first_b);
 int					ft_is_sorted(t_stack *anchor);
 int					ft_pick_rotate(t_stack *anchor, int to_find);
+void				ft_add_next(t_stack *new, t_stack **anchor);
 void				ft_add_node(t_stack *new, t_stack **anchor);
 t_stack				*ft_create_node(int value);
 void				ft_push_from_to(t_stack **from, t_stack **to);
@@ -92,8 +93,10 @@ void				ft_swap_a(t_stack **a, t_pack *pack);
 void				ft_swap_b(t_stack **b, t_pack *pack);
 void				ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
+void				ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_last_rotate(t_stack **a, t_pack *pack);
+void				ft_del_node(t_stack **anchor);
 void				ft_free_lists(t_stack *a, t_stack *b);
 
 #endif
