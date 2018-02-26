@@ -74,7 +74,7 @@ void	ft_do_shit(t_stack **a, t_stack **b, t_pack *pack, int *pivot, int *tail)
 	aptr = *a;
 	bptr = *b;
 	*pivot = ft_new_pivot(*a, *tail);
-	printf("dis out pivot - %d\n", *pivot);
+	//printf("dis out pivot - %d\n", *pivot);
 	while (aptr->value != *tail)
 	{
 		if (aptr->value >= *pivot)
@@ -100,7 +100,7 @@ void	ft_do_shit(t_stack **a, t_stack **b, t_pack *pack, int *pivot, int *tail)
 		ft_rotate_a(a, pack);
 		aptr = *a;
 	}
-	ft_print_stacks(*a, *b, "LOL", *pack);
+	//ft_print_stacks(*a, *b, "LOL", *pack);
 	if (ft_pick_rotate(bptr, ft_get_min(bptr)) == 1)
 		while (ft_get_last_value(bptr) != ft_get_min(bptr))
 		{
@@ -178,6 +178,21 @@ int		ft_is_part_sorted(t_stack *a, int tail)
 	 return (1);
 }
 
+int		ft_length(t_stack *a, int tail)
+{
+	t_stack *ptr;
+	int		ret;
+
+	ptr = a;
+	ret = 0;
+	while (ptr->value != tail)
+	{
+		ret += 1;
+		ptr = ptr->next;
+	}
+	return (ret);
+}
+
 void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack	*aptr;
@@ -244,7 +259,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		aptr = *a;
 		bptr = *b;
 	}
-	ft_print_stacks(pivots, 0, "LOL", *pack);
+	//ft_print_stacks(*a, *b, "stacks", *pack);
 	tail = pivots->value;
 	kray = pivots->next->value;
 	while (aptr->value != kray)
@@ -252,71 +267,148 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		ft_reverse_rotate_a(a, pack);
 		aptr = *a;
 	}
-	while (ft_is_part_sorted(aptr, tail))
+	while (pivots->next != NULL)
 	{
-		printf("from %d to %d sorted\n", kray, tail);
-		ft_del_node(&pivots);
-		tail = pivots->value;
-		kray = pivots->next->value;
-		while (aptr->value != kray)
+		while (pivots->next && ft_is_part_sorted(aptr, tail))
 		{
+			printf("from %d to %d sorted\n", kray, tail);
+			ft_del_node(&pivots);
+			tail = pivots->value;
+			if (pivots->next != NULL)
+			{
+				kray = pivots->next->value;
+				while (aptr->value != kray)
+				{
+					ft_reverse_rotate_a(a, pack);
+					aptr = *a;
+				}
+			}
+		}
+		printf("from %d to %d not sorted\n", kray, tail);
+		if (ft_length(aptr, tail) == 3)
+		{
+			ft_rotate_a(a, pack);
+			ft_swap_a(a, pack);
 			ft_reverse_rotate_a(a, pack);
 			aptr = *a;
 		}
-	}
-	printf("from %d to %d not sorted\n", kray, tail);
-	ft_print_stacks(*a, *b, "LOL", *pack);
-	ft_do_shit_short(a, b, pack, &pivot, &tail);
-	ft_add_next(ft_create_node(pivot), &pivots);
-	kray = pivots->next->value;
-	ft_print_stacks(*a, *b, "LOL", *pack);
-	while (ft_is_part_sorted(aptr, tail))
-	{
-		printf("from %d to %d sorted\n", kray, tail);
-		ft_del_node(&pivots);
-		tail = pivots->value;
-		kray = pivots->next->value;
-		while (aptr->value != kray)
+		// else if (ft_length(aptr, tail) <= 30)
+		// {
+		// 	ft_print_stacks(aptr, bptr, "stacks", *pack);
+		// 	while (aptr->value != tail)
+		// 	{
+		// 		ft_deal_with_b(b, a, pack);
+		// 		aptr = *a;
+		// 		bptr = *b;
+		// 	}
+		// 	while (bptr != NULL)
+		// 	{
+		// 		ft_push_from_b_to_a(a, b, pack);
+		// 		aptr = *a;
+		// 		bptr = *b;
+		// 	}
+		// }
+		else
 		{
-			ft_reverse_rotate_a(a, pack);
-			aptr = *a;
+			if (pivots->next != NULL)
+			{
+				ft_do_shit_short(a, b, pack, &pivot, &tail);
+				aptr = *a;
+				bptr = *b;
+				ft_add_next(ft_create_node(pivot), &pivots);
+				kray = pivots->next->value;
+			}
 		}
 	}
-	printf("from %d to %d not sorted\n", kray, tail);
-	ft_do_shit_short(a, b, pack, &pivot, &tail);
-	aptr = *a;
-	bptr = *b;
-	ft_add_next(ft_create_node(pivot), &pivots);
-	tail = pivots->value;
-	while (ft_is_part_sorted(aptr, tail))
-	{
-		printf("from %d to %d sorted\n", kray, tail);
-		ft_del_node(&pivots);
-		tail = pivots->value;
-		kray = pivots->next->value;
-		while (aptr->value != kray)
-		{
-			ft_reverse_rotate_a(a, pack);
-			aptr = *a;
-		}
-	}
-	ft_do_shit_short(a, b, pack, &pivot, &tail);
-	aptr = *a;
-	bptr = *b;
-	ft_add_next(ft_create_node(pivot), &pivots);
-	kray = pivots->next->value;
-	while (ft_is_part_sorted(aptr, tail))
-	{
-		printf("from %d to %d sorted\n", kray, tail);
-		ft_print_stacks(*a, *b, "LOL", *pack);
-		ft_del_node(&pivots);
-		tail = pivots->value;
-		kray = pivots->next->value;
-		while (aptr->value != kray)
-		{
-			ft_reverse_rotate_a(a, pack);
-			aptr = *a;
-		}
-	}
-	8yprintf("from %d to %d not sorted\n", kray, tail);
+	// while (ft_is_part_sorted(aptr, tail))
+	// {
+	// 	printf("from %d to %d sorted\n", kray, tail);
+	// 	ft_del_node(&pivots);
+	// 	tail = pivots->value;
+	// 	kray = pivots->next->value;
+	// 	while (aptr->value != kray)
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// }
+	// printf("from %d to %d not sorted\n", kray, tail);
+	// ft_print_stacks(*a, *b, "stacks", *pack);
+	// ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// aptr = *a;
+	// bptr = *b;
+	// ft_add_next(ft_create_node(pivot), &pivots);
+	// kray = pivots->next->value;
+	// ft_print_stacks(*a, *b, "LOL", *pack);
+	// while (ft_is_part_sorted(aptr, tail))
+	// {
+	// 	printf("from %d to %d sorted\n", kray, tail);
+	// 	ft_del_node(&pivots);
+	// 	tail = pivots->value;
+	// 	kray = pivots->next->value;
+	// 	while (aptr->value != kray)
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// }
+	// printf("from %d to %d not sorted\n", kray, tail);
+	// ft_print_stacks(*a, *b, "stacks", *pack);
+	// ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// aptr = *a;
+	// bptr = *b;
+	// ft_add_next(ft_create_node(pivot), &pivots);
+	// tail = pivots->value;
+	// while (ft_is_part_sorted(aptr, tail))
+	// {
+	// 	printf("from %d to %d sorted\n", kray, tail);
+	// 	ft_del_node(&pivots);
+	// 	tail = pivots->value;
+	// 	kray = pivots->next->value;
+	// 	while (aptr->value != kray)
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// }
+	// ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// aptr = *a;
+	// bptr = *b;
+	// ft_add_next(ft_create_node(pivot), &pivots);
+	// kray = pivots->next->value;
+	// while (ft_is_part_sorted(aptr, tail))
+	// {
+	// 	printf("from %d to %d sorted\n", kray, tail);
+	// 	ft_print_stacks(*a, *b, "LOL", *pack);
+	// 	ft_del_node(&pivots);
+	// 	tail = pivots->value;
+	// 	kray = pivots->next->value;
+	// 	while (aptr->value != kray)
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// }
+	// printf("from %d to %d not sorted\n", kray, tail);
+	// ft_print_stacks(*a, *b, "stacks", *pack);
+	// ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// aptr = *a;
+	// bptr = *b;
+	// ft_add_next(ft_create_node(pivot), &pivots);
+	// kray = pivots->next->value;
+	// while (ft_is_part_sorted(aptr, tail))
+	// {
+	// 	printf("from %d to %d sorted\n", kray, tail);
+	// 	ft_print_stacks(*a, *b, "LOL", *pack);
+	// 	ft_del_node(&pivots);
+	// 	tail = pivots->value;
+	// 	kray = pivots->next->value;
+	// 	while (aptr->value != kray)
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// }
+	// printf("from %d to %d not sorted\n", kray, tail);
+	ft_print_stacks(*a, *b, "stacks", *pack);
 }
