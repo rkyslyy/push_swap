@@ -13,27 +13,27 @@
 #include <stdio.h>
 #include "../swaplib.h"
 
-static void	ft_swap_rotate(t_stack **a, t_pack *pack)
-{
-	t_stack *ptr;
+// static void	ft_swap_rotate(t_stack **a, t_pack *pack)
+// {
+// 	t_stack *ptr;
 
-	ptr = *a;
-	if (!ft_is_sorted(ptr))
-		ft_swap_a(a, pack);
-	ptr = *a;
-	if (ft_pick_rotate(ptr, ft_get_min(ptr)) == 1)
-		while (ptr->value != ft_get_min(ptr))
-		{
-			ft_rotate_a(a, pack);
-			ptr = *a;
-		}
-	else
-		while (ptr->value != ft_get_min(ptr))
-		{
-			ft_reverse_rotate_a(a, pack);
-			ptr = *a;
-		}
-}
+// 	ptr = *a;
+// 	if (!ft_is_sorted(ptr))
+// 		ft_swap_a(a, pack);
+// 	ptr = *a;
+// 	if (ft_pick_rotate(ptr, ft_get_min(ptr)) == 1)
+// 		while (ptr->value != ft_get_min(ptr))
+// 		{
+// 			ft_rotate_a(a, pack);
+// 			ptr = *a;
+// 		}
+// 	else
+// 		while (ptr->value != ft_get_min(ptr))
+// 		{
+// 			ft_reverse_rotate_a(a, pack);
+// 			ptr = *a;
+// 		}
+// }
 
 int		ft_new_pivot(t_stack *a, int tail)
 {
@@ -220,18 +220,33 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	t_stack	*aptr;
 	t_stack	*bptr;
 	int		pivot;
-	int		tail;
-	int		mina;;
+	int		mem;
+	int		mina;
 	t_stack	*pivots;
 
 	aptr = *a;
 	bptr = *b;
-	pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
-	pivots = ft_create_node(pivot);
-	tail = ft_get_last_value(aptr);
-	while (aptr->value != tail)
+	pivots = NULL;
+	ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
+	while (ft_get_size(*a) > 2)
 	{
-		if (aptr->value >= 100)
+		pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
+		mem = ft_get_last_value(*a);
+		while (aptr->value != mem)
+		{
+			if (aptr->value <= pivot)
+			{
+				ft_push_from_a_to_b(a, b, pack);
+				aptr = *a;
+				bptr = *b;
+			}
+			else
+			{
+				ft_rotate_a(a, pack);
+				aptr = *a;
+			}
+		}
+		if (aptr->value <= pivot)
 		{
 			ft_push_from_a_to_b(a, b, pack);
 			aptr = *a;
@@ -242,222 +257,128 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 			ft_rotate_a(a, pack);
 			aptr = *a;
 		}
+		ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
 	}
-	if (aptr->value >= 100)
-	{
+//	ft_print_stacks(pivots, 0, "pivots", *pack);
+	if (aptr->value >= aptr->next->value)
+		ft_swap_a(a, pack);
+	ft_del_node(&pivots);
+	mina = ft_get_min(*a);
+	aptr = *a;
+	while (*a)
 		ft_push_from_a_to_b(a, b, pack);
-		aptr = *a;
-		bptr = *b;
-	}
-	else
+	while (ft_get_last_value(*b) != mina)
+		ft_rotate_b(b, pack);
+	bptr = *b;
+	aptr = *a;
+	// ft_del_node(&pivots);
+	while (pivots)
 	{
-		ft_rotate_a(a, pack);
+		while (bptr->value >= pivots->value)
+		{
+			ft_push_from_b_to_a(a, b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		while (ft_get_size(*a) > 2)
+		{
+			pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
+			mem = ft_get_last_value(*a);
+			while (aptr->value != mem)
+			{
+				if (aptr->value <= pivot)
+				{
+					ft_push_from_a_to_b(a, b, pack);
+					aptr = *a;
+					bptr = *b;
+				}
+				else
+				{
+					ft_rotate_a(a, pack);
+					aptr = *a;
+				}
+			}
+			if (aptr->value <= pivot)
+			{
+				ft_push_from_a_to_b(a, b, pack);
+				aptr = *a;
+				bptr = *b;
+			}
+			else
+			{
+				ft_rotate_a(a, pack);
+				aptr = *a;
+			}
+			ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
+		}
+		if (aptr->next != NULL && aptr->value >= aptr->next->value)
+			ft_swap_a(a, pack);
+		ft_del_node(&pivots);
+		mina = ft_get_min(*a);
+		aptr = *a;
+		while (*a)
+			ft_push_from_a_to_b(a, b, pack);
+		while (ft_get_last_value(*b) != mina)
+			ft_rotate_b(b, pack);
+		bptr = *b;
 		aptr = *a;
 	}
-	mina = ft_get_max(aptr);
-	// if (ft_pick_rotate(bptr, ft_get_min(bptr)) == 1)
-	// 	while (ft_get_last_value(bptr) != ft_get_min(bptr))
-	// 	{
-	// 		ft_rotate_b(b, pack);
-	// 		bptr = *b;
-	// 	}
-	// else
-	// 	while (ft_get_last_value(bptr) != ft_get_min(bptr))
-	// 	{
-	// 		ft_reverse_rotate_b(b, pack);
-	// 		bptr = *b;
-	// 	}
-	ft_quick_sort(a, b, pack);
-	ft_swap_rotate(a, pack);
-	printf("%d\n", mina);
-	// while (aptr != NULL)
+	// while (pivots != NULL)
 	// {
-	// 	ft_push_from_a_to_b(a, b, pack);
-	// 	aptr = *a;
-	// 	bptr = *b;
-	// }
-	// while (ft_get_min(bptr) <= mina)
-	// {
-	// 	if (bptr->value <= mina)
-	// 		ft_push_from_b_to_a(a, b, pack);
-	// 	else
-	// 		ft_rotate_b(b, pack);
-	// 	aptr = *a;
-	// 	bptr = *b;
-	// }
-	// ft_quick_sort(a, b, pack);
-	// tail = bptr->value;
-	// kray = aptr->value;
-	// while (bptr != NULL)
+	// 	while (bptr->value >= pivots->value)
 	// {
 	// 	ft_push_from_b_to_a(a, b, pack);
 	// 	aptr = *a;
 	// 	bptr = *b;
 	// }
-	// while (!(aptr->next->next->value == kray && aptr->next->value == ft_get_max(aptr)) && aptr->next->value != kray)
-	// {
-	// 	ft_do_shit(a, b, pack, &pivot, &tail);
-	// 	ft_add_node(ft_create_node(pivot), &pivots);
-	// 	aptr = *a;
-	// 	bptr = *b;
-	// }
 	// //ft_print_stacks(*a, *b, "stacks", *pack);
-	// tail = pivots->value;
-	// kray = pivots->next->value;
-	// while (aptr->value != ft_get_last_value(pivots))
+	// while (ft_get_size(*a) > 3)
 	// {
-	// 	ft_rotate_a(a, pack);
-	// 	aptr = *a;
-	// }
-	// printf("_______________\n");
-	// while (aptr != NULL)
-	// {
-	// 	ft_deal_with_b(b, a, pack);
-	// 	aptr = *a;
-	// 	bptr = *b;
-	// }
-	// while (pivots->next != NULL)
-	// {
-	// 	while (pivots->next && ft_is_part_sorted(aptr, tail))
+	// 	pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
+	// 	mem = ft_get_last_value(*a);
+	// 	while (aptr->value != mem)
 	// 	{
-	// 		printf("from %d to %d sorted\n", kray, tail);
-	// 		ft_del_node(&pivots);
-	// 		tail = pivots->value;
-	// 		if (pivots->next != NULL)
+	// 		if (aptr->value <= pivot)
 	// 		{
-	// 			kray = pivots->next->value;
-	// 			while (aptr->value != kray)
-	// 			{
-	// 				ft_reverse_rotate_a(a, pack);
-	// 				aptr = *a;
-	// 			}
-	// 		}
-	// 	}
-	// 	printf("from %d to %d not sorted\n", kray, tail);
-	// 	if (ft_length(aptr, tail) == 3)
-	// 	{
-	// 		ft_rotate_a(a, pack);
-	// 		ft_swap_a(a, pack);
-	// 		ft_reverse_rotate_a(a, pack);
-	// 		aptr = *a;
-	// 	}
-	// 	// else if (ft_length(aptr, tail) <= 30)
-	// 	// {
-	// 	// 	ft_print_stacks(aptr, bptr, "stacks", *pack);
-	// 	// 	while (aptr->value != tail)
-	// 	// 	{
-	// 	// 		ft_deal_with_b(b, a, pack);
-	// 	// 		aptr = *a;
-	// 	// 		bptr = *b;
-	// 	// 	}
-	// 	// 	while (bptr != NULL)
-	// 	// 	{
-	// 	// 		ft_push_from_b_to_a(a, b, pack);
-	// 	// 		aptr = *a;
-	// 	// 		bptr = *b;
-	// 	// 	}
-	// 	// }
-	// 	else
-	// 	{
-	// 		if (pivots->next != NULL)
-	// 		{
-	// 			ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// 			ft_push_from_a_to_b(a, b, pack);
 	// 			aptr = *a;
 	// 			bptr = *b;
-	// 			ft_add_next(ft_create_node(pivot), &pivots);
-	// 			kray = pivots->next->value;
+	// 		}
+	// 		else
+	// 		{
+	// 			ft_rotate_a(a, pack);
+	// 			aptr = *a;
 	// 		}
 	// 	}
-	// }
-	// while (ft_is_part_sorted(aptr, tail))
-	// {
-	// 	printf("from %d to %d sorted\n", kray, tail);
-	// 	ft_del_node(&pivots);
-	// 	tail = pivots->value;
-	// 	kray = pivots->next->value;
-	// 	while (aptr->value != kray)
+	// 	if (aptr->value <= pivot)
 	// 	{
-	// 		ft_reverse_rotate_a(a, pack);
+	// 		ft_push_from_b_to_a(a, b, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 	}
+	// 	else
+	// 	{
+	// 		ft_rotate_a(a, pack);
 	// 		aptr = *a;
 	// 	}
+	// 	ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
 	// }
-	// printf("from %d to %d not sorted\n", kray, tail);
-	// ft_print_stacks(*a, *b, "stacks", *pack);
-	// ft_do_shit_short(a, b, pack, &pivot, &tail);
+	// ft_swap_rotate(a, pack);
+	// //ft_print_stacks(*a, *b, "stacks", *pack);
+	// mina = ft_get_min(*a);
+	// aptr = *a;
+	// while (aptr)
+	// {
+	// 	ft_push_from_a_to_b(a, b, pack);
+	// 	aptr = *a;
+	// }
+	// while (ft_get_last_value(*b) != mina)
+	// 	ft_rotate_b(b, pack);
 	// aptr = *a;
 	// bptr = *b;
-	// ft_add_next(ft_create_node(pivot), &pivots);
-	// kray = pivots->next->value;
-	// ft_print_stacks(*a, *b, "LOL", *pack);
-	// while (ft_is_part_sorted(aptr, tail))
-	// {
-	// 	printf("from %d to %d sorted\n", kray, tail);
-	// 	ft_del_node(&pivots);
-	// 	tail = pivots->value;
-	// 	kray = pivots->next->value;
-	// 	while (aptr->value != kray)
-	// 	{
-	// 		ft_reverse_rotate_a(a, pack);
-	// 		aptr = *a;
-	// 	}
+	// ft_del_node(&pivots);
+	// ft_del_node(&pivots);
 	// }
-	// printf("from %d to %d not sorted\n", kray, tail);
-	// ft_print_stacks(*a, *b, "stacks", *pack);
-	// ft_do_shit_short(a, b, pack, &pivot, &tail);
-	// aptr = *a;
-	// bptr = *b;
-	// ft_add_next(ft_create_node(pivot), &pivots);
-	// tail = pivots->value;
-	// while (ft_is_part_sorted(aptr, tail))
-	// {
-	// 	printf("from %d to %d sorted\n", kray, tail);
-	// 	ft_del_node(&pivots);
-	// 	tail = pivots->value;
-	// 	kray = pivots->next->value;
-	// 	while (aptr->value != kray)
-	// 	{
-	// 		ft_reverse_rotate_a(a, pack);
-	// 		aptr = *a;
-	// 	}
-	// }
-	// ft_do_shit_short(a, b, pack, &pivot, &tail);
-	// aptr = *a;
-	// bptr = *b;
-	// ft_add_next(ft_create_node(pivot), &pivots);
-	// kray = pivots->next->value;
-	// while (ft_is_part_sorted(aptr, tail))
-	// {
-	// 	printf("from %d to %d sorted\n", kray, tail);
-	// 	ft_print_stacks(*a, *b, "LOL", *pack);
-	// 	ft_del_node(&pivots);
-	// 	tail = pivots->value;
-	// 	kray = pivots->next->value;
-	// 	while (aptr->value != kray)
-	// 	{
-	// 		ft_reverse_rotate_a(a, pack);
-	// 		aptr = *a;
-	// 	}
-	// }
-	// printf("from %d to %d not sorted\n", kray, tail);
-	// ft_print_stacks(*a, *b, "stacks", *pack);
-	// ft_do_shit_short(a, b, pack, &pivot, &tail);
-	// aptr = *a;
-	// bptr = *b;
-	// ft_add_next(ft_create_node(pivot), &pivots);
-	// kray = pivots->next->value;
-	// while (ft_is_part_sorted(aptr, tail))
-	// {
-	// 	printf("from %d to %d sorted\n", kray, tail);
-	// 	ft_print_stacks(*a, *b, "LOL", *pack);
-	// 	ft_del_node(&pivots);
-	// 	tail = pivots->value;
-	// 	kray = pivots->next->value;
-	// 	while (aptr->value != kray)
-	// 	{
-	// 		ft_reverse_rotate_a(a, pack);
-	// 		aptr = *a;
-	// 	}
-	// }
-	// printf("from %d to %d not sorted\n", kray, tail);
 	ft_print_stacks(*a, *b, "stacks", *pack);
+	ft_print_stacks(pivots, 0, "pivots", *pack);
 }

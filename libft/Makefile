@@ -12,13 +12,9 @@
 
 NAME = libft.a
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -c -Wall -Wextra -Werror
 
-HEADER = ./libft.h
-
-OPTIONS = -c -I $(HEADER)
-
-FT_PRINTF = ./ft_printf/libftprintf.a
+HEADER = libft.h
 
 SOURCES = ./ft_atoi.c ./ft_bzero.c ./ft_ch.c ./ft_filler.c ./ft_isalnum.c ./ft_isalpha.c ./ft_isascii.c ./ft_isdigit.c \
 			./ft_isprint.c ./ft_itoa.c ./ft_lstadd.c ./ft_lstdel.c ./ft_lstdelone.c ./ft_lstiter.c ./ft_lstmap.c ./ft_lstnew.c  \
@@ -30,31 +26,25 @@ SOURCES = ./ft_atoi.c ./ft_bzero.c ./ft_ch.c ./ft_filler.c ./ft_isalnum.c ./ft_i
 			./ft_strrchr.c ./ft_strsplit.c ./ft_strstr.c ./ft_strsub.c ./ft_strtrim.c ./ft_tolower.c ./ft_toupper.c ./ft_wc.c \
 			./ft_wl.c ./get_next_line.c
 
-OBJECTS = ./ft_atoi.o ./ft_bzero.o ./ft_ch.o ./ft_filler.o ./ft_isalnum.o ./ft_isalpha.o ./ft_isascii.o ./ft_isdigit.o \
-			./ft_isprint.o ./ft_itoa.o ./ft_lstadd.o ./ft_lstdel.o ./ft_lstdelone.o ./ft_lstiter.o ./ft_lstmap.o ./ft_lstnew.o  \
-			./ft_memalloc.o ./ft_memccpy.o ./ft_memchr.o ./ft_memcmp.o ./ft_memcpy.o ./ft_memdel.o ./ft_memmove.o ./ft_memset.o \
-			./ft_putchar.o ./ft_putchar_fd.o ./ft_putendl.o ./ft_putendl_fd.o ./ft_putnbr.o ./ft_putnbr_fd.o ./ft_putstr.o \
-			./ft_putstr_fd.o ./ft_size.o ./ft_strcat.o ./ft_strchr.o ./ft_strclr.o ./ft_strcmp.o ./ft_strcpy.o \
-			./ft_strdel.o ./ft_strdup.o ./ft_strequ.o ./ft_striter.o ./ft_striteri.o ./ft_strjoin.o ./ft_strlcat.o ./ft_strlen.o \
-			./ft_strmap.o ./ft_strmapi.o ./ft_strncat.o ./ft_strncmp.o ./ft_strncpy.o ./ft_strnequ.o ./ft_strnew.o ./ft_strnstr.o \
-			./ft_strrchr.o ./ft_strsplit.o ./ft_strstr.o ./ft_strsub.o ./ft_strtrim.o ./ft_tolower.o ./ft_toupper.o ./ft_wc.o \
-			./ft_wl.o ./get_next_line.o
+OBJECTS = $(SOURCES:.c=.o)
 
 all: $(NAME)
 
-$(NAME):
-				@ make -C ./ft_printf
-				@ gcc $(FLAGS) $(OPTIONS) $(SOURCES)
-				@ ar rc $(NAME) $(OBJECTS) ./ft_printf/*.o
-				@ ranlib $(NAME)
+$(NAME): $(OBJECTS)
+	@ make -C ./ft_printf
+	@ ar	rc	$(NAME)	$(OBJECTS) ./ft_printf/*.o
+	@ ranlib $(NAME)
+
+%.o: %.c $(HEADER)
+	@ gcc	$(FLAGS)	-o	$@ $<
+
 clean:
-				@ /bin/rm -f $(OBJECTS)
-				@ /bin/rm -f ./ft_printf/*.o
+	 @ /bin/rm	-f	$(OBJECTS)
+	 @ make clean -C ./ft_printf
 
-fclean:	clean
-				@ /bin/rm -f $(FT_PRINTF)
-				@ /bin/rm -f $(NAME)
+fclean: clean
+	 @ make fclean -C ./ft_printf
+	 @ /bin/rm	-f	$(NAME)
 
-re: fclean all
+re:	fclean all
 
-.PHONY: clean all fclean re

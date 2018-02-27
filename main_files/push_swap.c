@@ -102,7 +102,7 @@ int			main(int argc, char **argv)
 	else if (ft_get_size(a) <= 10)
 		ft_insert_swap(&a, &b, &pack);
 	else
-		ft_quick_sort(&a, &b, &pack);
+		ft_fast_af_boi(&a, &b, &pack);
 	ft_free_lists(a, b);
 	return (0);
 }
