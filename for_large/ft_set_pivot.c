@@ -22,7 +22,13 @@ void	ft_set_pivot(t_stack *a, t_pack *pack)
 		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 3.5);
 	else if (ft_get_size(a) <= 250)
 		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 4);
+	else if (ft_get_size(a) <= 300)
+		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 5.5);
+	else if (ft_get_size(a) <= 350)
+		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 6);
 	else if (ft_get_size(a) <= 400)
+		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 6.5);
+	else if (ft_get_size(a) <= 450)
 		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 7);
 	else if (ft_get_size(a) <= 500)
 		pack->pivot = ft_get_pivot(a, ft_get_size(a) / 7.5);
