@@ -13,27 +13,27 @@
 #include <stdio.h>
 #include "../swaplib.h"
 
-// static void	ft_swap_rotate(t_stack **a, t_pack *pack)
-// {
-// 	t_stack *ptr;
+static void	ft_swap_rotate(t_stack **a, t_pack *pack)
+{
+	t_stack *ptr;
 
-// 	ptr = *a;
-// 	if (!ft_is_sorted(ptr))
-// 		ft_swap_a(a, pack);
-// 	ptr = *a;
-// 	if (ft_pick_rotate(ptr, ft_get_min(ptr)) == 1)
-// 		while (ptr->value != ft_get_min(ptr))
-// 		{
-// 			ft_rotate_a(a, pack);
-// 			ptr = *a;
-// 		}
-// 	else
-// 		while (ptr->value != ft_get_min(ptr))
-// 		{
-// 			ft_reverse_rotate_a(a, pack);
-// 			ptr = *a;
-// 		}
-// }
+	ptr = *a;
+	if (!ft_is_sorted(ptr))
+		ft_swap_a(a, pack);
+	ptr = *a;
+	if (ft_pick_rotate(ptr, ft_get_min(ptr)) == 1)
+		while (ptr->value != ft_get_min(ptr))
+		{
+			ft_rotate_a(a, pack);
+			ptr = *a;
+		}
+	else
+		while (ptr->value != ft_get_min(ptr))
+		{
+			ft_reverse_rotate_a(a, pack);
+			ptr = *a;
+		}
+}
 
 int		ft_new_pivot(t_stack *a, int tail)
 {
@@ -215,6 +215,21 @@ int		ft_length(t_stack *a, int tail)
 	return (ret);
 }
 
+int		ft_find_size(t_stack *b, int pivot)
+{
+	int ret;
+	t_stack *ptr;
+
+	ret = 0;
+	ptr = b;
+	while (ptr->value >= pivot)
+	{
+		ret += 1;
+		ptr = ptr->next;
+	}
+	return (ret);
+}
+
 void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack	*aptr;
@@ -228,7 +243,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	bptr = *b;
 	pivots = NULL;
 	ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
-	while (ft_get_size(*a) > 2)
+	while (ft_get_size(*a) > 3)
 	{
 		pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
 		mem = ft_get_last_value(*a);
@@ -260,8 +275,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
 	}
 //	ft_print_stacks(pivots, 0, "pivots", *pack);
-	if (aptr->value >= aptr->next->value)
-		ft_swap_a(a, pack);
+	ft_swap_rotate(a, pack);
 	ft_del_node(&pivots);
 	mina = ft_get_min(*a);
 	aptr = *a;
@@ -274,13 +288,13 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	// ft_del_node(&pivots);
 	while (pivots)
 	{
-		while (bptr->value >= pivots->value)
+		while (bptr->value >= pivots->value && bptr->value != ft_get_max(bptr))
 		{
 			ft_push_from_b_to_a(a, b, pack);
 			aptr = *a;
 			bptr = *b;
 		}
-		while (ft_get_size(*a) > 2)
+		while (ft_get_size(*a) > 3)
 		{
 			pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
 			mem = ft_get_last_value(*a);
@@ -311,8 +325,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 			}
 			ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
 		}
-		if (aptr->next != NULL && aptr->value >= aptr->next->value)
-			ft_swap_a(a, pack);
+		ft_swap_rotate(a, pack);
 		ft_del_node(&pivots);
 		mina = ft_get_min(*a);
 		aptr = *a;
@@ -323,6 +336,8 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		bptr = *b;
 		aptr = *a;
 	}
+	while (*b)
+		ft_push_from_b_to_a(a, b, pack);
 	// while (pivots != NULL)
 	// {
 	// 	while (bptr->value >= pivots->value)
