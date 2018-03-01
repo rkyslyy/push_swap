@@ -84,5 +84,5 @@ void		ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 		aptr = *a;
 		bptr = *b;
 	}
-	ft_final(a, b, pack);
+	// ft_final(a, b, pack);
 }
