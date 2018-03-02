@@ -130,104 +130,6 @@ int		ft_new_pivot(t_stack *a, int tail)
 	return (ret);
 }
 
-void	ft_do_shit(t_stack **a, t_stack **b, t_pack *pack, int *pivot, int *tail)
-{
-	t_stack *aptr;
-	t_stack *bptr;
-
-	aptr = *a;
-	bptr = *b;
-	*pivot = ft_new_pivot(*a, *tail);
-	//printf("dis out pivot - %d\n", *pivot);
-	while (aptr->value != *tail)
-	{
-		if (aptr->value >= *pivot)
-		{
-			ft_push_from_a_to_b(a, b, pack);
-			aptr = *a;
-			bptr = *b;
-		}
-		else
-		{
-			ft_rotate_a(a, pack);
-			aptr = *a;
-		}
-	}
-	if (aptr->value >= *pivot)
-	{
-		ft_push_from_a_to_b(a, b, pack);
-		aptr = *a;
-		bptr = *b;
-	}
-	else
-	{
-		ft_rotate_a(a, pack);
-		aptr = *a;
-	}
-	//ft_print_stacks(*a, *b, "LOL", *pack);
-	if (ft_pick_rotate(bptr, ft_get_min(bptr)) == 1)
-		while (ft_get_last_value(bptr) != ft_get_min(bptr))
-		{
-			ft_rotate_b(b, pack);
-			bptr = *b;
-		}
-	else
-		while (ft_get_last_value(bptr) != ft_get_min(bptr))
-		{
-			ft_reverse_rotate_b(b, pack);
-			bptr = *b;
-		}
-	*tail = bptr->value;
-	while (bptr != NULL)
-	{
-		ft_push_from_b_to_a(a, b, pack);
-		aptr = *a;
-		bptr = *b;
-	}
-}
-
-void	ft_do_shit_short(t_stack **a, t_stack **b, t_pack *pack, int *pivot, int *tail)
-{
-	t_stack *aptr;
-	t_stack *bptr;
-
-	aptr = *a;
-	bptr = *b;
-	*pivot = ft_new_pivot(*a, *tail);
-	while (aptr->value != *tail)
-	{
-		if (aptr->value >= *pivot)
-		{
-			ft_push_from_a_to_b(a, b, pack);
-			aptr = *a;
-			bptr = *b;
-		}
-		else
-		{
-			ft_rotate_a(a, pack);
-			aptr = *a;
-		}
-	}
-	if (ft_pick_rotate(bptr, ft_get_min(bptr)) == 1)
-		while (ft_get_last_value(bptr) != ft_get_min(bptr))
-		{
-			ft_rotate_b(b, pack);
-			bptr = *b;
-		}
-	else
-		while (ft_get_last_value(bptr) != ft_get_min(bptr))
-		{
-			ft_reverse_rotate_b(b, pack);
-			bptr = *b;
-		}
-	while (bptr != NULL)
-	{
-		ft_push_from_b_to_a(a, b, pack);
-		aptr = *a;
-		bptr = *b;
-	}
-}
-
 int		ft_is_part_sorted(t_stack *a, int tail)
 {
 	t_stack *ptr;
@@ -240,21 +142,6 @@ int		ft_is_part_sorted(t_stack *a, int tail)
 	 	ptr = ptr->next;
 	 }
 	 return (1);
-}
-
-int		ft_length(t_stack *a, int tail)
-{
-	t_stack *ptr;
-	int		ret;
-
-	ptr = a;
-	ret = 0;
-	while (ptr->value != tail)
-	{
-		ret += 1;
-		ptr = ptr->next;
-	}
-	return (ret);
 }
 
 int		ft_find_size(t_stack *b, int pivot)
@@ -272,6 +159,21 @@ int		ft_find_size(t_stack *b, int pivot)
 	return (ret);
 }
 
+int		ft_find_size_a(t_stack *a, int pivot)
+{
+	int ret;
+	t_stack *ptr;
+
+	ret = 0;
+	ptr = a;
+	while (ptr->next && ptr->value <= pivot)
+	{
+		ret += 1;
+		ptr = ptr->next;
+	}
+	return (ret);
+}
+
 int		ft_find_next(t_stack *b, int pivot)
 {
 	t_stack *ptr;
@@ -280,6 +182,87 @@ int		ft_find_next(t_stack *b, int pivot)
 	while (ptr->next && ptr->value >= pivot)
 		ptr = ptr->next;
 	return (ptr->value);
+}
+
+int		ft_find_next_a(t_stack *a, int pivot)
+{
+	t_stack *ptr;
+
+	ptr = a;
+	while (ptr->next && ptr->value < pivot)
+		ptr = ptr->next;
+	return (ptr->value);
+}
+
+int		ft_min(t_stack *a)
+{
+	int ret;
+	int	count;
+	t_stack *ptr;
+
+	ret = a->value;
+	count = 0;
+	ptr = a;
+	while (count < 3)
+	{
+		if (ptr->value < ret)
+			ret = ptr->value;
+		ptr = ptr->next;
+		count += 1;
+	}
+	return (ret);
+}
+
+void	ft_swap_three(t_stack **a, t_stack **b, t_pack *pack)
+{
+	t_stack *ptr;
+	int		min;
+
+	ptr = *a;
+	min = ft_min(*a);
+	printf("min is %d\n", min);
+	if (ptr->value > ptr->next->value ||
+		ptr->next->value > ptr->next->next->value)
+	{
+		if (ptr->value > ptr->next->value && ptr->next->value < ptr->next->next->value)
+			ft_swap_a(a, pack);
+		else if (ptr->value < ptr->next->value && ptr->next->value > ptr->next->next->value)
+		{
+			if (ptr->value == min)
+			{
+				ft_rotate_a(a, pack);
+				ft_swap_a(a, pack);
+				ft_reverse_rotate_a(a, pack);
+			}
+			else
+			{
+				ft_push_from_a_to_b(a, b, pack);
+				ft_swap_a(a, pack);
+				ft_rotate_a(a, pack);
+				ft_push_from_b_to_a(a, b, pack);
+				ft_reverse_rotate_a(a, pack);
+			}
+		}
+		else if (ptr->value > ptr->next->value && ptr->next->value < ptr->next->next->value)
+		{
+			ft_push_from_a_to_b(a, b, pack);
+			ft_rotate_a(a, pack);
+			ft_rotate_a(a, pack);
+			ft_push_from_b_to_a(a, b, pack);
+			ft_reverse_rotate_a(a, pack);
+			ft_reverse_rotate_a(a, pack);
+		}
+		else if (ptr->value > ptr->next->value && ptr->next->value < ptr->next->next->value)
+		{
+			ft_push_from_a_to_b(a, b, pack);
+			ft_swap_a(a, pack);
+			ft_rotate_a(a, pack);
+			ft_rotate_a(a, pack);
+			ft_push_from_b_to_a(a, b, pack);
+			ft_reverse_rotate_a(a, pack);
+			ft_reverse_rotate_a(a, pack);
+		}
+	}
 }
 
 void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
@@ -294,7 +277,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	bptr = *b;
 	pivots = NULL;
 	ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
-	while (ft_get_size(*a) > 50)
+	while (!ft_is_sorted(*a))
 	{
 		pivot = ft_get_pivot(*a, ft_get_size(*a) / 2);
 		mem = ft_get_last_value(*a);
@@ -325,101 +308,3548 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		}
 		ft_add_node(ft_create_node(ft_get_min(*a)), &pivots);
 	}
-	// printf("%d\n", ft_get_size(*a));
-	ft_quick_sort(a, b, pack);
-	aptr = *a;
-	bptr = *b;
-	while (bptr->value >= pivots->value)
+	while (aptr->value != ft_get_min(*a))
 	{
-		ft_push_from_b_to_a(a, b, pack);
+		ft_rotate_a(a, pack);
 		aptr = *a;
-		bptr = *b;
 	}
-	while (ft_get_last_value(*b) >= pivots->next->value)
-		ft_reverse_rotate_b(b, pack);
-	if (ft_pick_rotate(*a, ft_get_min(*a) == 1))
-		while (aptr->value != ft_get_min(*a))
-		{
-			ft_rotate_a(a, pack);
-			aptr = *a;
-		}
-	else
-		while (aptr->value != ft_get_min(*a))
-		{
-			ft_reverse_rotate_a(a, pack);
-			aptr = *a;
-		}
-	while (pivots->next)
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
 	{
-	// 	ft_print_stacks(*a, *b, "stacks", *pack);
-	// ft_print_stacks(pivots, 0, "pivots", *pack);
-		while (ft_find_size(*b, pivots->next->value) > 20)
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
 		{
-			// printf("breakin`\n");
-			mem = ft_get_last_value(*b);
-			pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
-			ft_rotate(&pivots);
-			while (bptr->value >= pivots->value && bptr->value != mem)
-			{
-				if (bptr->value >= pivot)
-					ft_push_from_b_to_a(a, b, pack);
-				else
-					ft_rotate_b(b, pack);
-				aptr = *a;
-				bptr = *b;
-			}
 			if (bptr->value >= pivot)
-			{
-				mem = bptr->next->value;
 				ft_push_from_b_to_a(a, b, pack);
-			}
 			else
 				ft_rotate_b(b, pack);
 			aptr = *a;
 			bptr = *b;
-			if (ft_pick_rotate(*b, mem) == 1)
-				while (ft_get_last_value(*b) != mem)
-					ft_rotate_b(b, pack);
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
 			else
-				while (ft_get_last_value(*b) != mem)
-					ft_reverse_rotate_b(b, pack);
-			while (aptr->value <= ft_get_last_value(pivots))
-			{
-				ft_push_from_a_to_b(a, b, pack);
-				aptr = *a;
-				bptr = *b;
-			}
-			ft_add_node(ft_create_node(pivot), &pivots);
-			ft_reverse_rotate(&pivots);
-		}
-		// ft_print_stacks(pivots, 0, "pivots", *pack);
-		// ft_print_stacks(*a, *b, "stacks", *pack);
-		while (*b && ft_find_size(*b, pivots->next->value) <= 20)
-		{
-			ft_del_node(&pivots);
-			// ft_print_stacks(pivots, 0, "pivots", *pack);
-			while (*b && ft_get_max(*b) >= pivots->value)
-			{
-				ft_deal_with_a(a, b, pack);
-				aptr = *a;
-				bptr = *b;
-			}
-		}
-		// ft_print_stacks(*a, *b, "stacks", *pack);
-		// ft_print_stacks(pivots, 0, "pivots", *pack);
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
 	}
-	if (ft_pick_rotate(*a, ft_get_min(*a)) == 1)
-		while (aptr->value != ft_get_min(*a))
-		{
-			ft_rotate_a(a, pack);
-			aptr = *a;
-		}
 	else
-		while (aptr->value != ft_get_min(*a))
+	{
+		while (bptr->value >= pivots->next->value)
 		{
-			ft_reverse_rotate_a(a, pack);
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
 			aptr = *a;
+			bptr = *b;
 		}
-	// ft_print_stacks(*a, *b, "stacks", *pack);
-	// ft_print_stacks(pivots, 0, "pivots", *pack);
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value < pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	while (ft_get_size(*b) > 252)
+	{
+		mem = ft_get_last_value(*b);
+	if (ft_find_size(*b, pivots->next->value) > 3)
+	{
+		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (bptr->value >= pivot)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	else
+	{
+		while (bptr->value >= pivots->next->value)
+		{
+			if (bptr->value >= pivots->next->value)
+				ft_push_from_b_to_a(a, b, pack);
+			else
+				ft_rotate_b(b, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (ft_pick_rotate(*b, mem) == 1)
+			while (ft_get_last_value(*b) != mem)
+				ft_rotate_b(b, pack);
+		else
+			while (ft_get_last_value(*b) != mem)
+				ft_reverse_rotate_b(b, pack);
+		aptr = *a;
+		bptr = *b;
+	}
+	while (ft_find_size_a(*a, pivots->value) > 3)
+	{
+		printf("brekin dis bitch\n");
+		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+		printf("%d\n", pivot);
+		mem = ft_get_last_value(*a);
+		while (aptr->value <= pivots->value)
+		{
+			if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		}
+		if (aptr->value <= pivot)
+				ft_push_from_a_to_b(a, b, pack);
+			else
+				ft_rotate_a(a, pack);
+			aptr = *a;
+			bptr = *b;
+		if (ft_pick_rotate(*a, mem) == 1)
+			while (ft_get_last_value(*a) != mem)
+				ft_rotate_a(a, pack);
+		else
+			while (ft_get_last_value(*a) != mem)
+				ft_reverse_rotate_a(a, pack);
+		aptr = *a;
+		bptr = *b;
+		ft_add_next(ft_create_node(pivot), &pivots);
+	}
+	if (ft_find_size_a(*a, pivots->value) == 2)
+	{
+		if (aptr->value > aptr->next->value)
+		ft_swap_a(a, pack);
+		aptr = *a;
+		printf("swappin\n");
+	}
+	else if (ft_find_size_a(*a, pivots->value) == 3)
+	{
+		ft_swap_three(a, b, pack);
+		aptr = *a;
+		bptr = *b;
+		printf("swappin three\n");
+	}
+	ft_del_node(&pivots);
+	}
+	// while (*b)
+	// {
+	// 	mem = ft_get_last_value(*b);
+	// 	if (ft_find_size(*b, pivots->next->value) > 3)
+	// 	{
+	// 		pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
+	// 		while (bptr->value >= pivots->next->value)
+	// 		{
+	// 			if (bptr->value >= pivot)
+	// 				ft_push_from_b_to_a(a, b, pack);
+	// 			else
+	// 				ft_rotate_b(b, pack);
+	// 			aptr = *a;
+	// 			bptr = *b;
+	// 		}
+	// 		if (bptr->value >= pivot)
+	// 				ft_push_from_b_to_a(a, b, pack);
+	// 			else
+	// 				ft_rotate_b(b, pack);
+	// 			aptr = *a;
+	// 			bptr = *b;
+	// 		if (ft_pick_rotate(*b, mem) == 1)
+	// 			while (ft_get_last_value(*b) != mem)
+	// 				ft_rotate_b(b, pack);
+	// 		else
+	// 			while (ft_get_last_value(*b) != mem)
+	// 				ft_reverse_rotate_b(b, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 		ft_add_next(ft_create_node(pivot), &pivots);
+	// 	}
+	// 	else
+	// 	{
+	// 		while (bptr->value >= pivots->next->value)
+	// 		{
+	// 			if (bptr->value >= pivots->next->value)
+	// 				ft_push_from_b_to_a(a, b, pack);
+	// 			else
+	// 				ft_rotate_b(b, pack);
+	// 			aptr = *a;
+	// 			bptr = *b;
+	// 		}
+	// 		if (ft_pick_rotate(*b, mem) == 1)
+	// 			while (ft_get_last_value(*b) != mem)
+	// 				ft_rotate_b(b, pack);
+	// 		else
+	// 			while (ft_get_last_value(*b) != mem)
+	// 				ft_reverse_rotate_b(b, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 	}
+	// 	while (ft_find_size_a(*a, pivots->value) > 3)
+	// 	{
+	// 		printf("brekin dis bitch\n");
+	// 		pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
+	// 		printf("%d\n", pivot);
+	// 		mem = ft_get_last_value(*a);
+	// 		while (aptr->value <= pivots->value)
+	// 		{
+	// 			if (aptr->value <= pivot)
+	// 				ft_push_from_a_to_b(a, b, pack);
+	// 			else
+	// 				ft_rotate_a(a, pack);
+	// 			aptr = *a;
+	// 			bptr = *b;
+	// 		}
+	// 		if (aptr->value <= pivot)
+	// 				ft_push_from_a_to_b(a, b, pack);
+	// 			else
+	// 				ft_rotate_a(a, pack);
+	// 			aptr = *a;
+	// 			bptr = *b;
+	// 		if (ft_pick_rotate(*a, mem) == 1)
+	// 			while (ft_get_last_value(*a) != mem)
+	// 				ft_rotate_a(a, pack);
+	// 		else
+	// 			while (ft_get_last_value(*a) != mem)
+	// 				ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 		ft_add_next(ft_create_node(pivot), &pivots);
+	// 	}
+	// 	if (ft_find_size_a(*a, pivots->value) == 2)
+	// 	{
+	// 		if (aptr->value > aptr->next->value)
+	// 		ft_swap_a(a, pack);
+	// 		aptr = *a;
+	// 		printf("swappin\n");
+	// 	}
+	// 	else if (ft_find_size_a(*a, pivots->value) == 3)
+	// 	{
+	// 		ft_swap_three(a, b, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 		printf("swappin three\n");
+	// 	}
+	// 	ft_del_node(&pivots);
+	// 	}
+	// 	if (ft_find_size_a(*a, pivots->value) == 2)
+	// 	{
+	// 		if (aptr->value > aptr->next->value)
+	// 		ft_swap_a(a, pack);
+	// 		aptr = *a;
+	// 		printf("swappin\n");
+	// 	}
+	// 	else if (ft_find_size_a(*a, pivots->value) == 3)
+	// 	{
+	// 		ft_swap_three(a, b, pack);
+	// 		aptr = *a;
+	// 		bptr = *b;
+	// 		printf("swappin three\n");
+	// 	}
+	// 	ft_del_node(&pivots);
+	// }
+	ft_print_stacks(*a, *b, "stacks", *pack);
+	ft_print_stacks(pivots, 0, "pivots", *pack);
 }
