@@ -377,7 +377,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		ft_rotate_a(a, pack);
 		aptr = *a;
 	}
-	while (ft_get_size(*b) > 100)
+	while (ft_get_size(*b) > 150)
 	{
 		mem = ft_get_last_value(*b);
 		if (ft_find_size(*b, pivots->next->value) > 3)
@@ -483,23 +483,23 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	ft_rev_quick_sort(b, a, pack);
 	while (*b)
 		ft_deal_with_a(a, b, pack);
-	aptr = *a;
-	// while (*b)
-	// 	ft_deal_with_a(a, b, pack);
 	// aptr = *a;
-	// bptr = *b;
-	if (ft_pick_rotate(*a, ft_get_min(*a)) == 1)
-		while (aptr->value != ft_get_min(*a))
-		{
-			ft_rotate_a(a, pack);
-			aptr = *a;
-		}
-	else
-		while (aptr->value != ft_get_min(*a))
-		{
-			ft_reverse_rotate_a(a, pack);
-			aptr = *a;
-		}
+	// // while (*b)
+	// // 	ft_deal_with_a(a, b, pack);
+	// // aptr = *a;
+	// // bptr = *b;
+	// if (ft_pick_rotate(*a, ft_get_min(*a)) == 1)
+	// 	while (aptr->value != ft_get_min(*a))
+	// 	{
+	// 		ft_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
+	// else
+	// 	while (aptr->value != ft_get_min(*a))
+	// 	{
+	// 		ft_reverse_rotate_a(a, pack);
+	// 		aptr = *a;
+	// 	}
 	// if (ft_is_sorted(*a))
 	// 	printf("a is sorted boii\n");
 	// else

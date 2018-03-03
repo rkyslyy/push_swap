@@ -13,6 +13,56 @@
 #include "../swaplib.h"
 #include <stdio.h>
 
+static int	ft_get_rev_pivot(t_stack *a, int val)
+{
+	int		mem;
+	int		ret;
+	int		count;
+	t_stack	*ptr;
+
+	count = 0;
+	mem = ft_get_max(a);
+	ret = ft_get_min(a);
+	while (count < val)
+	{
+		ret = ft_get_min(a);
+		ptr = a;
+		while (ptr != NULL)
+		{
+			if (ptr->value > ret && ptr->value < mem)
+				ret = ptr->value;
+			ptr = ptr->next;
+		}
+		mem = ret;
+		count += 1;
+	}
+	return (ret);
+}
+
+static void	ft_set_rev_pivot(t_stack *a, t_pack *pack)
+{
+	if (ft_get_size(a) <= 20)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 2);
+	else if (ft_get_size(a) <= 50)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 2.5);
+	else if (ft_get_size(a) <= 100)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 3.5);
+	else if (ft_get_size(a) <= 250)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 4);
+	else if (ft_get_size(a) <= 300)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 5.5);
+	else if (ft_get_size(a) <= 350)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 6);
+	else if (ft_get_size(a) <= 400)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 6.5);
+	else if (ft_get_size(a) <= 450)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 7);
+	else if (ft_get_size(a) <= 500)
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 7.5);
+	else
+		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 9);
+}
+
 static int		ft_get_big(t_stack *b, int val)
 {
 	t_stack *ptr;
@@ -60,26 +110,26 @@ static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 	}
 }
 
-static void	ft_shmatochok(t_stack **a, t_stack **b, t_pack *pack)
-{
-	t_stack *aptr;
-	t_stack *bptr;
+// static void	ft_shmatochok(t_stack **a, t_stack **b, t_pack *pack)
+// {
+// 	t_stack *aptr;
+// 	t_stack *bptr;
 
-	aptr = *a;
-	bptr = *b;
-	if (ft_pick_rotate(bptr, ft_get_max(bptr)) == 1)
-		while (bptr->value != ft_get_max(bptr))
-		{
-			ft_rotate_a(b, pack);
-			bptr = *b;
-		}
-	else
-		while (bptr->value != ft_get_max(bptr))
-		{
-			ft_reverse_rotate_a(b, pack);
-			bptr = *b;
-		}
-}
+// 	aptr = *a;
+// 	bptr = *b;
+// 	if (ft_pick_rotate(bptr, ft_get_max(bptr)) == 1)
+// 		while (bptr->value != ft_get_max(bptr))
+// 		{
+// 			ft_rotate_a(b, pack);
+// 			bptr = *b;
+// 		}
+// 	else
+// 		while (bptr->value != ft_get_max(bptr))
+// 		{
+// 			ft_reverse_rotate_a(b, pack);
+// 			bptr = *b;
+// 		}
+// }
 
 void		ft_rev_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 {
@@ -90,7 +140,9 @@ void		ft_rev_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 	bptr = *b;
 	while (aptr != NULL && !ft_is_sorted(aptr))
 	{
-		ft_set_pivot(aptr, pack);
+		ft_set_rev_pivot(aptr, pack);
+		// printf("%d\n", pack->pivot);
+		// break ;
 		pack->mem = aptr->value;
 		ft_rotate_b(a, pack);
 		aptr = *a;
@@ -99,10 +151,10 @@ void		ft_rev_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 		bptr = *b;
 		if (aptr->value >= pack->pivot)
 			ft_rev_deal_with_b(b, a, pack);
-		ft_shmatochok(a, b, pack);
+		// ft_shmatochok(a, b, pack);
 		aptr = *a;
 		bptr = *b;
-		// ft_print_stacks(*a, *b, "saAD", *pack);
+		// ft_print_stacks(*b, *a, "saAD", *pack);
 		// getchar();
 	}
 	// ft_final(a, b, pack);
