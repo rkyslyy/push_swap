@@ -62,7 +62,9 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./main_files/ft_valid_com.c		\
 			./main_files/ft_vis_stacks.c	\
 			./main_files/ft_free_nums.c		\
-			./for_large_2/ft_fast_af_boi.c
+			./for_large_2/ft_fast_af_boi.c	\
+			./for_large_2/ft_rev_quick.c	\
+			./for_large_2/ft_rev_deal_with_b.c
 
 
 SWAPSOURCES = $(LIBFT) $(OPERATORS) $(LISTS) $(CHECKUP) $(FOR_LARGE)

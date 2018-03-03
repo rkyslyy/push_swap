@@ -98,5 +98,7 @@ void				ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_last_rotate(t_stack **a, t_pack *pack);
 void				ft_del_node(t_stack **anchor);
 void				ft_free_lists(t_stack *a, t_stack *b);
+void				ft_rev_quick_sort(t_stack **b, t_stack **a, t_pack *pack);
+void				ft_rev_deal_with_b(t_stack **a, t_stack **b, t_pack *pack);
 
 #endif

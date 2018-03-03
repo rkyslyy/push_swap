@@ -35,7 +35,7 @@ void	ft_swap_rotate(t_stack **a, t_pack *pack)
 		}
 }
 
-int		ft_get_big(t_stack *b, int val)
+static int		ft_get_big(t_stack *b, int val)
 {
 	t_stack *ptr;
 	int		ret;
@@ -297,6 +297,36 @@ void	ft_swap_three(t_stack **a, t_stack **b, t_pack *pack)
 	}
 }
 
+int		ft_is_left(t_stack *stack, int end, int pivot, int mem)
+{
+	t_stack *ptr;
+
+	ptr = stack;
+	if (mem <= pivot && mem > end)
+		return (1);
+	while (ptr->value >= end)
+	{
+		if (ptr->value >= pivot)
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
+int		ft_is_left_a(t_stack *stack, int end, int pivot)
+{
+	t_stack *ptr;
+
+	ptr = stack;
+	while (ptr->value <= end)
+	{
+		if (ptr->value <= pivot)
+			return (1);
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
 void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack	*aptr;
@@ -347,14 +377,14 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		ft_rotate_a(a, pack);
 		aptr = *a;
 	}
-	while (count < 270)
+	while (ft_get_size(*b) > 100)
 	{
 		mem = ft_get_last_value(*b);
 		if (ft_find_size(*b, pivots->next->value) > 3)
 		{
-			printf("brekin b\n");
+			// printf("brekin b\n");
 			pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
-			while (bptr->value >= pivots->next->value && bptr->value != mem)
+			while (bptr->value >= pivots->next->value && bptr->value != mem && ft_is_left(*b, pivots->next->value, pivot, mem))
 			{
 				if (bptr->value >= pivot)
 					ft_push_from_b_to_a(a, b, pack);
@@ -370,8 +400,6 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 				mem = bptr->next->value;
 				ft_push_from_b_to_a(a, b, pack);
 			}
-			else
-				ft_rotate_b(b, pack);
 			aptr = *a;
 			bptr = *b;
 			if (ft_pick_rotate(*b, mem) == 1)
@@ -388,10 +416,7 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		{
 			while (bptr->value >= pivots->next->value)
 			{
-				if (bptr->value >= pivots->next->value)
-					ft_push_from_b_to_a(a, b, pack);
-				else
-					ft_rotate_b(b, pack);
+				ft_push_from_b_to_a(a, b, pack);
 				aptr = *a;
 				bptr = *b;
 			}
@@ -406,11 +431,11 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 		}
 		while (ft_find_size_a(*a, pivots->value) > 3)
 		{
-			printf("brekin a\n");
+			// printf("brekin a\n");
 			pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
-			printf("%d\n", pivot);
+			// printf("%d\n", pivot);
 			mem = ft_get_last_value(*a);
-			while (aptr->value <= pivots->value)
+			while (aptr->value <= pivots->value && ft_is_left_a(*a, pivots->value, pivot))
 			{
 				if (aptr->value <= pivot)
 					ft_push_from_a_to_b(a, b, pack);
@@ -420,11 +445,9 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 				bptr = *b;
 			}
 			if (aptr->value <= pivot)
-					ft_push_from_a_to_b(a, b, pack);
-				else
-					ft_rotate_a(a, pack);
-				aptr = *a;
-				bptr = *b;
+				ft_push_from_a_to_b(a, b, pack);
+			aptr = *a;
+			bptr = *b;
 			if (ft_pick_rotate(*a, mem) == 1)
 				while (ft_get_last_value(*a) != mem)
 					ft_rotate_a(a, pack);
@@ -440,27 +463,47 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 			if (aptr->value > aptr->next->value)
 			ft_swap_a(a, pack);
 			aptr = *a;
-			printf("swappin\n");
+			// printf("swappin\n");
 		}
 		else if (ft_find_size_a(*a, pivots->value) == 3)
 		{
-			printf("we got %d %d %d\n", aptr->value, aptr->next->value, aptr->next->next->value);
-			printf("swappin three\n");
+			// printf("we got %d %d %d\n", aptr->value, aptr->next->value, aptr->next->next->value);
+			// printf("swappin three\n");
 			ft_swap_three(a, b, pack);
 			aptr = *a;
 			bptr = *b;
 		}
 		ft_del_node(&pivots);
 		count += 1;
-		ft_print_stacks(*a, *b, "stacks", *pack);
-		ft_print_stacks(pivots, 0, "pivots", *pack);
-		printf("Press Enter...\n");
-		getchar();
+		// ft_print_stacks(*a, *b, "stacks", *pack);
+		// ft_print_stacks(pivots, 0, "pivots", *pack);
+		// printf("Press Enter...\n");
+		// getchar();
 	}
-	if (ft_is_sorted(*a))
-		printf("a is sorted boii\n");
+	ft_rev_quick_sort(b, a, pack);
+	while (*b)
+		ft_deal_with_a(a, b, pack);
+	aptr = *a;
+	// while (*b)
+	// 	ft_deal_with_a(a, b, pack);
+	// aptr = *a;
+	// bptr = *b;
+	if (ft_pick_rotate(*a, ft_get_min(*a)) == 1)
+		while (aptr->value != ft_get_min(*a))
+		{
+			ft_rotate_a(a, pack);
+			aptr = *a;
+		}
 	else
-		printf("a is not sorted\n");
+		while (aptr->value != ft_get_min(*a))
+		{
+			ft_reverse_rotate_a(a, pack);
+			aptr = *a;
+		}
+	// if (ft_is_sorted(*a))
+	// 	printf("a is sorted boii\n");
+	// else
+	// 	printf("a is not sorted\n");
 	// while (*b)
 	// {
 	// 	mem = ft_get_last_value(*b);
@@ -575,6 +618,6 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	// 	}
 	// 	ft_del_node(&pivots);
 	// }
-	ft_print_stacks(*a, *b, "stacks", *pack);
-	ft_print_stacks(pivots, 0, "pivots", *pack);
+	// ft_print_stacks(*a, *b, "stacks", *pack);
+	// ft_print_stacks(pivots, 0, "pivots", *pack);
 }
