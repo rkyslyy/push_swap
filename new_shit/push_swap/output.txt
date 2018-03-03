@@ -1,0 +1,30 @@
+________________________________________________
+Instructions memo:                              |
+sa - swap first two in stack 'A'                |
+sb - swap first two in stack 'B'                |
+ss - swap first two in both stacks              |
+ra - rotate stack 'A'                           |
+rb - rotate stack 'B'                           |
+rr - rotate both stacks                         |
+rra - reverse rotate stack 'A'                  |
+rrb - reverse rotate stack 'B'                  |
+rrr - reverse ratate both stacks                |
+pa - push top value from stack 'B' to stack 'A' |
+pb - push top value form stack 'A' to stack 'B' |
+________________________________________________|
+
+_________________
+Given values are:
+3 4 5 2 1 
+
+Suggested sorting instructions are:
+____
+ra
+ra
+ra
+pb
+ra
+pa
+rra
+____
+Values are sorted
