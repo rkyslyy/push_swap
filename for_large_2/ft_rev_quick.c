@@ -110,27 +110,6 @@ static void	ft_pall(t_stack **a, t_stack **b, t_pack *p)
 	}
 }
 
-// static void	ft_shmatochok(t_stack **a, t_stack **b, t_pack *pack)
-// {
-// 	t_stack *aptr;
-// 	t_stack *bptr;
-
-// 	aptr = *a;
-// 	bptr = *b;
-// 	if (ft_pick_rotate(bptr, ft_get_max(bptr)) == 1)
-// 		while (bptr->value != ft_get_max(bptr))
-// 		{
-// 			ft_rotate_a(b, pack);
-// 			bptr = *b;
-// 		}
-// 	else
-// 		while (bptr->value != ft_get_max(bptr))
-// 		{
-// 			ft_reverse_rotate_a(b, pack);
-// 			bptr = *b;
-// 		}
-// }
-
 void		ft_rev_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack *aptr;
@@ -151,11 +130,7 @@ void		ft_rev_quick_sort(t_stack **a, t_stack **b, t_pack *pack)
 		bptr = *b;
 		if (aptr->value >= pack->pivot)
 			ft_rev_deal_with_b(b, a, pack);
-		// ft_shmatochok(a, b, pack);
 		aptr = *a;
 		bptr = *b;
-		// ft_print_stacks(*b, *a, "saAD", *pack);
-		// getchar();
 	}
-	// ft_final(a, b, pack);
 }

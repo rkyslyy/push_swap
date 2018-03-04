@@ -50,7 +50,12 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./validation/ft_return_usage.c	\
 			./validation/ft_is_input_valid.c
 
-FOR_LARGE = ./for_large/ft_deal_with_b.c	\
+FOR_LARGE = ./for_large_2/ft_help_1.c		\
+			./for_large_2/ft_help_2.c		\
+			./for_large_2/ft_swap_three.c	\
+			./for_large_2/ft_deal_with_a.c	\
+			./for_large_2/ft_new_pivot.c	\
+			./for_large/ft_deal_with_b.c	\
 			./for_large/ft_set_pivot.c		\
 			./for_large/ft_final.c			\
 			./for_large/ft_quick_sort.c		\
@@ -62,6 +67,7 @@ FOR_LARGE = ./for_large/ft_deal_with_b.c	\
 			./main_files/ft_valid_com.c		\
 			./main_files/ft_vis_stacks.c	\
 			./main_files/ft_free_nums.c		\
+			./for_large_2/ft_first_break.c	\
 			./for_large_2/ft_fast_af_boi.c	\
 			./for_large_2/ft_rev_quick.c	\
 			./for_large_2/ft_rev_deal_with_b.c
