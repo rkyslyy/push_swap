@@ -50,7 +50,8 @@ CHECKUP =	./checkup/ft_get_next.c			\
 			./validation/ft_return_usage.c	\
 			./validation/ft_is_input_valid.c
 
-FOR_LARGE = ./for_large_2/ft_help_1.c		\
+FOR_LARGE = ./for_large_2/ft_break_b.c		\
+			./for_large_2/ft_help_1.c		\
 			./for_large_2/ft_help_2.c		\
 			./for_large_2/ft_swap_three.c	\
 			./for_large_2/ft_deal_with_a.c	\

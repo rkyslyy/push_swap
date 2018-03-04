@@ -25,55 +25,9 @@ void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 	bptr = *b;
 	while (ft_get_size(*b) > 150)
 	{
-		pack->mem = ft_get_last_value(*b);
-		if (ft_find_size(*b, pivots->next->value) > 3)
-		{
-			pack->pivot = ft_new_pivot(*b, ft_find_next(*b, pivots->next->value));
-			while (bptr->value >= pivots->next->value && bptr->value != pack->mem && ft_is_left(*b, pivots->next->value, pack->pivot, pack->mem))
-			{
-				if (bptr->value >= pack->pivot)
-					ft_push_from_b_to_a(a, b, pack);
-				else
-				{
-					ft_rotate_b(b, pack);
-				}
-				aptr = *a;
-				bptr = *b;
-			}
-			if (bptr->value >= pack->pivot)
-			{
-				pack->mem = bptr->next->value;
-				ft_push_from_b_to_a(a, b, pack);
-			}
-			aptr = *a;
-			bptr = *b;
-			if (ft_pick_rotate(*b, pack->mem) == 1)
-				while (ft_get_last_value(*b) != pack->mem)
-					ft_rotate_b(b, pack);
-			else
-				while (ft_get_last_value(*b) != pack->mem)
-					ft_reverse_rotate_b(b, pack);
-			aptr = *a;
-			bptr = *b;
-			ft_add_next(ft_create_node(pack->pivot), &pivots);
-		}
-		else
-		{
-			while (bptr->value >= pivots->next->value)
-			{
-				ft_push_from_b_to_a(a, b, pack);
-				aptr = *a;
-				bptr = *b;
-			}
-			if (ft_pick_rotate(*b, pack->mem) == 1)
-				while (ft_get_last_value(*b) != pack->mem)
-					ft_rotate_b(b, pack);
-			else
-				while (ft_get_last_value(*b) != pack->mem)
-					ft_reverse_rotate_b(b, pack);
-			aptr = *a;
-			bptr = *b;
-		}
+		ft_break_b(a, b, pack, &pivots);
+		aptr = *a;
+		bptr = *b;
 		while (ft_find_size_a(*a, pivots->value) > 3)
 		{
 			pack->pivot = ft_new_pivot(*a, ft_find_next_a(*a, pivots->value));
