@@ -14,12 +14,12 @@
 
 void	ft_make_header(int *fd, t_stack *a)
 {
-	*fd = open("log.txt", O_WRONLY | O_CREAT | O_TRUNC);
+	*fd = creat("log.txt", S_IRUSR | S_IWUSR);
 	ft_putendl_fd("________________________________________________", *fd);
 	ft_putendl_fd("Instructions memo:                              |", *fd);
 	ft_putendl_fd("sa - swap first two values in stack 'A'         |", *fd);
 	ft_putendl_fd("sb - swap first two values in stack 'B'         |", *fd);
-	ft_putendl_fd("ss - swap first two in both stacks              |", *fd);
+	ft_putendl_fd("ss - swap first two values in both stacks       |", *fd);
 	ft_putendl_fd("ra - rotate stack 'A'                           |", *fd);
 	ft_putendl_fd("rb - rotate stack 'B'                           |", *fd);
 	ft_putendl_fd("rr - rotate both stacks                         |", *fd);
