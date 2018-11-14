@@ -12,21 +12,21 @@
 
 #include "../swaplib.h"
 
-static void ft_two_or_three(t_stack **a, t_stack **b, t_pack *pack, t_stack *pivots)
+static void	ft_two_or_three(t_stack **a, t_stack **b, t_pack *pack, t_stack *p)
 {
 	t_stack *aptr;
 
 	aptr = *a;
-	if (ft_find_size_a(*a, pivots->value) == 2)
+	if (ft_find_size_a(*a, p->value) == 2)
 	{
 		if (aptr->value > aptr->next->value)
 			ft_swap_a(a, pack);
 	}
-	else if (ft_find_size_a(*a, pivots->value) == 3)
+	else if (ft_find_size_a(*a, p->value) == 3)
 		ft_swap_three(a, b, pack);
 }
 
-void	ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
+void		ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack	*aptr;
 	t_stack	*bptr;

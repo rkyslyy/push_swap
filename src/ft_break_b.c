@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_break_b.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/05 16:36:26 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/03/05 16:36:27 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../swaplib.h"
 
 static void	ft_lil_to_a(t_stack **a, t_stack **b, t_stack *p, t_pack *pack)
@@ -39,12 +51,12 @@ static void	ft_p_or_r_b(t_stack **a, t_stack **b, t_pack *pack, t_stack *pivptr)
 	}
 }
 
-void	ft_break_b(t_stack **a, t_stack **b, t_pack *pack, t_stack **pivots)
+void		ft_break_b(t_stack **a, t_stack **b, t_pack *pack, t_stack **pivots)
 {
 	t_stack *aptr;
 	t_stack *bptr;
 	t_stack *pivptr;
-	
+
 	aptr = *a;
 	bptr = *b;
 	pivptr = *pivots;

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../swaplib.h"
+#include "../swaplib.h"
 
 void	ft_nums_a(t_stack *ptr, t_stack *a, t_pack pack, char const *line)
 {

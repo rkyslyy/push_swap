@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_nums.c                                     :+:      :+:    :+:   */
+/*   ft_return_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/20 14:15:47 by rkyslyy           #+#    #+#             */
-/*   Updated: 2018/02/20 14:15:47 by rkyslyy          ###   ########.fr       */
+/*   Created: 2018/02/19 18:12:57 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/02/19 18:12:57 by rkyslyy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../swaplib.h"
 
-void	ft_free_nums(char **nums)
+int	ft_return_error(int argc)
 {
-	size_t ptr;
-
-	ptr = 0;
-	while (nums[ptr] != 0)
-	{
-		free(nums[ptr]);
-		ptr += 1;
-	}
-	free(nums);
+	if (argc > 1)
+		ft_putendl_fd("Error", 2);
+	return (1);
 }

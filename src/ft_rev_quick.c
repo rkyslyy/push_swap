@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../swaplib.h"
-#include <stdio.h>
 
 static int	ft_get_rev_pivot(t_stack *a, int val)
 {
@@ -63,7 +62,7 @@ static void	ft_set_rev_pivot(t_stack *a, t_pack *pack)
 		pack->pivot = ft_get_rev_pivot(a, ft_get_size(a) / 9);
 }
 
-static int		ft_get_big(t_stack *b, int val)
+static int	ft_get_big(t_stack *b, int val)
 {
 	t_stack *ptr;
 	int		ret;

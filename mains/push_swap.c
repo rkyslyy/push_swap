@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "../swaplib.h"
 
 static void	ft_swap_rotate(t_stack **a, t_pack *pack)

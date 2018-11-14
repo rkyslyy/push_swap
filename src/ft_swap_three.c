@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_swap_three.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkyslyy <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/05 16:29:29 by rkyslyy           #+#    #+#             */
+/*   Updated: 2018/03/05 16:29:30 by rkyslyy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../swaplib.h"
 
 static void	ft_for_321(t_stack **a, t_stack **b, t_pack *pack)
@@ -60,7 +72,7 @@ static void	ft_for_312_213(t_stack **a, t_stack **b, t_pack *pack, int max)
 	}
 }
 
-void	ft_swap_three(t_stack **a, t_stack **b, t_pack *pack)
+void		ft_swap_three(t_stack **a, t_stack **b, t_pack *pack)
 {
 	t_stack *ptr;
 	int		min;
@@ -72,7 +84,8 @@ void	ft_swap_three(t_stack **a, t_stack **b, t_pack *pack)
 	if (ptr->value > ptr->next->value ||
 		ptr->next->value > ptr->next->next->value)
 	{
-		if (ptr->value > ptr->next->value && ptr->next->value < ptr->next->next->value)
+		if (ptr->value > ptr->next->value && ptr->next->value <
+			ptr->next->next->value)
 			ft_for_312_213(a, b, pack, max);
 		else if (ptr->value < ptr->next->value &&
 			ptr->next->value > ptr->next->next->value)

@@ -12,7 +12,7 @@
 
 #include "../swaplib.h"
 
-static int		ft_get_big(t_stack *b, int val)
+static int	ft_get_big(t_stack *b, int val)
 {
 	t_stack *ptr;
 	int		ret;
@@ -30,7 +30,7 @@ static int		ft_get_big(t_stack *b, int val)
 	return (ret);
 }
 
-void	ft_rev_deal_with_b(t_stack **b, t_stack **a, t_pack *pack)
+void		ft_rev_deal_with_b(t_stack **b, t_stack **a, t_pack *pack)
 {
 	t_stack *bptr;
 	t_stack *aptr;

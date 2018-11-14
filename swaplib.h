@@ -95,9 +95,12 @@ void				ft_swap_a(t_stack **a, t_pack *pack);
 void				ft_swap_b(t_stack **b, t_pack *pack);
 void				ft_swap_both(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_quick_sort(t_stack **a, t_stack **b, t_pack *pack);
-void 				ft_first_break(t_stack **a, t_stack **b, t_pack *pack, t_stack **pivots);
-void				ft_break_b(t_stack **a, t_stack **b, t_pack *pack, t_stack **pivots);
-void				ft_break_a(t_stack **a, t_stack **b, t_pack *pack, t_stack **pivots);
+void				ft_first_break(t_stack **a, t_stack **b, t_pack *pack,
+								t_stack **pivots);
+void				ft_break_b(t_stack **a, t_stack **b, t_pack *pack,
+								t_stack **pivots);
+void				ft_break_a(t_stack **a, t_stack **b, t_pack *pack,
+								t_stack **pivots);
 void				ft_fast_af_boi(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_insert_swap(t_stack **a, t_stack **b, t_pack *pack);
 void				ft_last_rotate(t_stack **a, t_pack *pack);
