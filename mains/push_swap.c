@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "../swaplib.h"
 
 static void	ft_swap_rotate(t_stack **a, t_pack *pack)
@@ -38,16 +39,25 @@ static int	ft_build_stack(t_stack **a, t_pack *pack, char **argv, int argc)
 {
 	char	**nums;
 
+	// printf("STR = %s\n", argv[argc - 1]);
 	pack->add = 0;
 	nums = ft_strsplit(argv[argc - 1], ' ');
-	if (nums[0] == 0)
-		ft_free_nums(nums, 0);
+	int x = 0;
+	while (nums[x] != 0){
+		// printf("%s\n", nums[x]);
+		x++;
+	}
+	if (nums[0] == 0){
+		// printf("%s\n", "empty");
+		return ft_free_nums(nums, 0);
+	}
 	if (!ft_is_input_valid(nums, pack))
-		ft_free_nums(nums, 1);
+		return ft_free_nums(nums, 1);
+	// printf("%s\n", "HERE");
 	if (ft_strcmp(nums[0], "-v") == 0 || ft_strcmp(nums[0], "-o") == 0
 		|| ft_strcmp(nums[0], "-t") == 0 || ft_strcmp(nums[0], "-h") == 0
 		|| ft_strcmp(nums[0], "-r") == 0 || ft_strcmp(nums[0], "-i") == 0)
-		ft_free_nums(nums, 0);
+		return ft_free_nums(nums, 0);
 	while (nums[pack->add] != 0)
 		pack->add += 1;
 	pack->add -= 1;
